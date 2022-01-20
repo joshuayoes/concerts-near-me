@@ -74,6 +74,7 @@ export const getArtistTopTracksBySearch = async (name: string) => {
 
 export const getManyArtistsTopTracksBySearch = async (names: string[]) => {
   const allTopTrackUris: string[] = [];
+  logger.info(`Searching for ${names.length} artists...`);
 
   for (const name of names) {
     try {
