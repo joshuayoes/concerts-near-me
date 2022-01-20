@@ -1,21 +1,23 @@
+import clc from "cli-color";
+
 type Logger = (message: string) => void;
 
-export const log: Logger = (message: string) => {
-  console.log(message);
+const info: Logger = (message: string) => {
+  console.log(`${clc.blue("INFO")} - ${message}`);
 };
 
-export const logWarn: Logger = (message: string) => {
-  console.warn(message);
+const warn: Logger = (message: string) => {
+  console.warn(`${clc.yellow("WARN")} - ${message}`);
 };
 
-export const logError: Logger = (message: string) => {
-  console.error(message);
+const error: Logger = (message: string) => {
+  console.error(`${clc.red("ERROR")} - ${message}`);
 };
 
-export const logInfo: Logger = (message: string) => {
-  console.info(message);
-};
+const logger = {
+  info,
+  warn,
+  error,
+} as const;
 
-export const logDebug: Logger = (message: string) => {
-  console.debug(message);
-};
+export default logger;

@@ -1,4 +1,3 @@
-import { log } from "./logger";
 import { washingtonsScrapper } from "./scrape";
 import {
   addTracksToPlaylist,
@@ -15,6 +14,4 @@ import {
   const allTopTrackUris = await getManyArtistsTopTracksBySearch(artistsNames);
 
   await addTracksToPlaylist(playlistId, allTopTrackUris);
-
-  log(`Playlist "${playlistName}" updated`);
 })();

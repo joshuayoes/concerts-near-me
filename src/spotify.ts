@@ -1,12 +1,17 @@
 import api from "./api";
-import { log, logError, logWarn } from "./logger";
+import logger from "./logger";
 
 export const getArtistBySearch = async (query: string) => {
   const res = await api.search(query, ["artist"]);
   const [artist] = res.body.artists?.items ?? [];
   if (!artist) {
-    throw Error(`${query} was not found on Spotify`);
+    throw Error(`"${query}" was not found on Spotify`);
   }
+
+  const message = query === artist.name
+    ? `Found "${artist.name}" on Spotify`
+    : `Found "${query}" as "${artist.name}" on Spotify`;
+  logger.info(message);
   return artist;
 };
 
@@ -16,7 +21,7 @@ export const createPlaylist = async (name: string, description = "") => {
     description,
   });
 
-  log(`Playlist "${name}" created: ${res.body.uri}`);
+  logger.info(`Playlist "${name}" created: "${res.body.uri}"`);
 
   return res.body.id;
 };
@@ -50,10 +55,14 @@ export const addTracksToPlaylist = async (
       await api.addTracksToPlaylist(playlistId, chunk);
     } catch (error) {
       if (error instanceof Error) {
-        logError(error.message);
+        logger.error(error.message);
       }
     }
   }
+
+  logger.info(
+    `Added ${uris.length} tracks to playlist "spotify:playlist:${playlistId}"`,
+  );
 };
 
 export const getArtistTopTracksBySearch = async (name: string) => {
@@ -70,10 +79,9 @@ export const getManyArtistsTopTracksBySearch = async (names: string[]) => {
     try {
       const topTrackUris = await getArtistTopTracksBySearch(name);
       allTopTrackUris.push(...topTrackUris);
-      log(`${name} added to playlist`);
     } catch (error) {
       if (error instanceof Error) {
-        logWarn(error.message);
+        logger.warn(error.message);
       }
     }
   }
