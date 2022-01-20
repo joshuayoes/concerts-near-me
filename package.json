@@ -4,9 +4,9 @@
   "description": "Create playlists based on upcoming concerts",
   "main": "index.js",
   "scripts": {
+    "initialize": "cp .env.example .env",
     "start": "npx ts-node src/index.ts",
     "serve": "npx ts-node src/express.ts",
-    "fetch": "npx ts-node src/fetch.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
