@@ -10,20 +10,15 @@ export const getArtistBySearch = async (query: string) => {
   return artist;
 };
 
-export const createPlaylist = async (name: string) => {
-  const id = null;
+export const createPlaylist = async (name: string, description = "") => {
+  const res = await api.createPlaylist(name, {
+    public: true,
+    description,
+  });
 
-  if (!id) {
-    const res = await api.createPlaylist(name, {
-      public: true,
-    });
+  log(`Playlist "${name}" created: ${res.body.uri}`);
 
-    log(`Playlist "${name}" created: ${res.body.uri}`);
-
-    return res.body.id;
-  }
-
-  return id;
+  return res.body.id;
 };
 
 export const getTopTracksIds = async (artistId: string, maxSize = 5) => {
