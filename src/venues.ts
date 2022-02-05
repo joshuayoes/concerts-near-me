@@ -14,7 +14,7 @@ export const getVenues = async (jsonPath = "/venues.json") => {
   const filePath = paths.join(pwd, jsonPath);
 
   const buffer = await fs.readFile(filePath);
-  const json = JSON.parse(buffer.toString());
+  const json: unknown = JSON.parse(buffer.toString());
 
   return VenuesSchema.parse(json);
 };
