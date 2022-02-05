@@ -4,7 +4,7 @@
   "description": "Create playlists based on upcoming concerts",
   "main": "index.js",
   "scripts": {
-    "initialize": "cp .env.example .env",
+    "initialize": "cp .env.example .env && cp venues.example.json venues.json",
     "start": "npx ts-node src/index.ts",
     "serve": "npx ts-node src/express.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
