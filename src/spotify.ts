@@ -103,7 +103,7 @@ export const emptyPlaylist = async (playlistId: string) => {
     }
 
     logger.info(
-      `Removed ${initalRes.body.total} tracks from playlist "${playlistId}"`,
+      `Removed ${initalRes.body.total} tracks from playlist "spotify:playlist:${playlistId}"`,
     );
   } catch (error) {
     if (error instanceof Error) {
