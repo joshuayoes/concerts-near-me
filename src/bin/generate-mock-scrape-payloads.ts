@@ -1,6 +1,6 @@
-import path from "path";
 import fs from "fs/promises";
 import { getHtml } from "../scrape";
+import { MOCK_DIR } from "../utils";
 
 (async () => {
   const [, , scrapperName, url] = process.argv;
@@ -19,8 +19,7 @@ import { getHtml } from "../scrape";
 
   const html = await getHtml(url);
 
-  const mocksDirPath = path.join(__dirname, "..", "__tests__", "__mocks__");
-  const mockFilePath = `${mocksDirPath}/${scrapperName}.html`;
+  const mockFilePath = `${MOCK_DIR}/${scrapperName}.html`;
 
   await fs.writeFile(mockFilePath, html);
 })();
