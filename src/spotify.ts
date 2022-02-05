@@ -92,13 +92,18 @@ export const getManyArtistsTopTracksBySearch = async (names: string[]) => {
 
 export const emptyPlaylist = async (playlistId: string) => {
   try {
-    // TODO: paginate through API to ensure all tracks are deleted
-    const res = await api.getPlaylistTracks(playlistId);
-    const tracks = res.body.items;
-    const trackUris = tracks.map(({ track }) => ({ uri: track.uri }));
-    await api.removeTracksFromPlaylist(playlistId, trackUris);
+    const initalRes = await api.getPlaylistTracks(playlistId);
+    const pages = Math.ceil(initalRes.body.total / initalRes.body.limit);
+
+    for (let i = 0; i < pages; i++) {
+      const res = await api.getPlaylistTracks(playlistId);
+      const tracks = res.body.items;
+      const trackIds = tracks.map(({ track }) => ({ uri: track.uri }));
+      await api.removeTracksFromPlaylist(playlistId, trackIds);
+    }
+
     logger.info(
-      `Removed ${tracks.length} tracks from playlist "${playlistId}"`,
+      `Removed ${initalRes.body.total} tracks from playlist "${playlistId}"`,
     );
   } catch (error) {
     if (error instanceof Error) {
