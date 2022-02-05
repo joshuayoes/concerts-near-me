@@ -2,7 +2,7 @@
   "name": "concerts-near-me",
   "version": "1.0.0",
   "description": "Create playlists based on upcoming concerts",
-  "main": "index.js",
+  "main": "src/index.ts",
   "scripts": {
     "initialize": "cp .env.example .env && cp venues.example.json venues.json",
     "start": "npx ts-node src/index.ts",
