@@ -1,12 +1,12 @@
 import cheerio, { CheerioAPI } from "cheerio";
 import axios from "axios";
 
-// #region Library
-type ArtistNameBuilder = ($: CheerioAPI) => string[];
+// #region Core Library
+type ArtistNameReducer = ($: CheerioAPI) => string[];
 
 type ScrapperFactory = (
   concertCalendarUrl: string,
-  artistNameBuilder: ArtistNameBuilder,
+  artistNameReducer: ArtistNameReducer,
 ) => Promise<string[]>;
 
 export const getHtml = async (url: string): Promise<string> =>
@@ -14,22 +14,25 @@ export const getHtml = async (url: string): Promise<string> =>
 
 export const getCherrio = (html: string): CheerioAPI => cheerio.load(html);
 
-const scrapperFactory: ScrapperFactory = async (url, builder) => {
+const scrapperFactory: ScrapperFactory = async (url, reducer) => {
   const html = await getHtml(url);
   const $ = getCherrio(html);
-  return builder($);
+  return reducer($);
 };
 
 export type Scrapper = () => Promise<string[]>;
 // #endregion
 
-// #region Washingtons
-export const washingtonArtistNameBuilder: ArtistNameBuilder = ($) => {
-  const extractHeading = (node: Record<string, any>): string =>
-    "data" in node.children[0] ? (node.children[0] as any).data : "";
+// #region Utilities
+const extractHeading = (node: Record<string, any>): string =>
+  "data" in node.children[0] ? (node.children[0] as any).data : "";
 
-  const remove = (regex: string | RegExp) =>
-    (title: string) => title.replace(regex, "").trim();
+const remove = (regex: string | RegExp) =>
+  (title: string) => title.replace(regex, "").trim();
+// #endregion
+
+// #region Washingtons
+export const washingtonArtistNameReducer: ArtistNameReducer = ($) => {
   const removeWhitespace = remove(/\n\t/g);
   const removeBoldNotation = remove(/\*{1,2}.+\*{1,2}\s+/g);
   const removeAnEveningWith = remove(/An Evening with /g);
@@ -58,7 +61,7 @@ export const washingtonArtistNameBuilder: ArtistNameBuilder = ($) => {
 export const washingtonsScrapper: Scrapper = () =>
   scrapperFactory(
     "https://washingtonsfoco.com/events/",
-    washingtonArtistNameBuilder,
+    washingtonArtistNameReducer,
   );
 // #endregion
 
