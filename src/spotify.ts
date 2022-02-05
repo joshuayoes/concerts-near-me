@@ -89,3 +89,20 @@ export const getManyArtistsTopTracksBySearch = async (names: string[]) => {
 
   return allTopTrackUris;
 };
+
+export const emptyPlaylist = async (playlistId: string) => {
+  try {
+    // TODO: paginate through API to ensure all tracks are deleted
+    const res = await api.getPlaylistTracks(playlistId);
+    const tracks = res.body.items;
+    const trackUris = tracks.map(({ track }) => ({ uri: track.uri }));
+    await api.removeTracksFromPlaylist(playlistId, trackUris);
+    logger.info(
+      `Removed ${tracks.length} tracks from playlist "${playlistId}"`,
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      logger.error(error.message);
+    }
+  }
+};
