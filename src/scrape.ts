@@ -2,7 +2,7 @@ import cheerio, { CheerioAPI } from "cheerio";
 import axios from "axios";
 
 // #region Core Library
-type ArtistNameReducer = ($: CheerioAPI) => string[];
+export type ArtistNameReducer = ($: CheerioAPI) => string[];
 
 type ScrapperFactory = (
   concertCalendarUrl: string,

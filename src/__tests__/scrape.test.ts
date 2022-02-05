@@ -1,21 +1,29 @@
-import test from "ava";
+import test, { ExecutionContext } from "ava";
 import {
   aggieTheaterArtistNameReducer,
+  ArtistNameReducer,
   getCherrio,
   washingtonsArtistNameReducer,
 } from "../scrape";
 import { getLocalHtml } from "../utils";
 
-test("washingtonsScrapper reduces html to expected artist names", async (t) => {
-  const html = await getLocalHtml("washingtonsScrapper.html");
-  const $ = getCherrio(html);
-  const artistNames = washingtonsArtistNameReducer($);
-  t.snapshot(artistNames);
-});
+const scrapperTestFactory = (mockPath: string, reducer: ArtistNameReducer) =>
+  async (t: ExecutionContext<unknown>) => {
+    const html = await getLocalHtml(mockPath);
+    const $ = getCherrio(html);
+    const artistNames = reducer($);
+    t.snapshot(artistNames);
+  };
 
-test("aggieTheaterScrapper reduces html to expected artist names", async (t) => {
-  const html = await getLocalHtml("aggieTheaterScrapper.html");
-  const $ = getCherrio(html);
-  const artistNames = aggieTheaterArtistNameReducer($);
-  t.snapshot(artistNames);
-});
+test(
+  "washingtonsScrapper reduces html to expected artist names",
+  scrapperTestFactory("washingtonsScrapper.html", washingtonsArtistNameReducer),
+);
+
+test(
+  "aggieTheaterScrapper reduces html to expected artist names",
+  scrapperTestFactory(
+    "aggieTheaterScrapper.html",
+    aggieTheaterArtistNameReducer,
+  ),
+);
