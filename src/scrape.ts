@@ -48,3 +48,13 @@ export const washingtonsScrapper: Scrapper = () =>
       return uniqueArtistNames;
     },
   );
+
+export const scrapperMapFactory = () => {
+  // create a map of scrappers, with the urls as the keys, and scrapper as the value
+  const scrapperMap = new Map<string, Scrapper>();
+  scrapperMap.set(
+    "https://washingtonsfoco.com/events/",
+    washingtonsScrapper,
+  );
+  return scrapperMap;
+};

@@ -1,18 +1,29 @@
-import { washingtonsScrapper } from "./scrape";
+import logger from "./logger";
+import { scrapperMapFactory } from "./scrape";
 import {
   addTracksToPlaylist,
-  createPlaylist,
+  emptyPlaylist,
   getManyArtistsTopTracksBySearch,
 } from "./spotify";
+import { getVenues } from "./venues";
 
 (async () => {
-  const artistsNames = await washingtonsScrapper();
-  const allTopTrackUris = await getManyArtistsTopTracksBySearch(artistsNames);
+  const venues = await getVenues();
+  const scrapperMap = scrapperMapFactory();
 
-  const playlistName = "Washington's Upcoming Artists";
-  const playlistDescription =
-    "The most popular tracks from artists performing at Washington's soon: https://washingtonsfoco.com/events/";
+  for (const venue of venues) {
+    const { url, playlistId } = venue;
+    const scrapper = scrapperMap.get(url);
 
-  const playlistId = await createPlaylist(playlistName, playlistDescription);
-  await addTracksToPlaylist(playlistId, allTopTrackUris);
+    if (!scrapper) {
+      logger.warn(`No scrapper found for "${url}"`);
+      continue;
+    }
+
+    logger.info(`Scrapping "${url}"...`);
+    const artistsNames = await scrapper();
+    const allTopTrackUris = await getManyArtistsTopTracksBySearch(artistsNames);
+    await emptyPlaylist(playlistId);
+    await addTracksToPlaylist(playlistId, allTopTrackUris);
+  }
 })();
