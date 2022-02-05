@@ -29,15 +29,18 @@ const extractHeading = (node: Record<string, any>): string =>
 
 const remove = (regex: string | RegExp) =>
   (title: string) => title.replace(regex, "").trim();
+
+const removeAfterAmpersand = remove(/ &.+/g);
 // #endregion
 
 // #region Washingtons
-export const washingtonArtistNameReducer: ArtistNameReducer = ($) => {
+const washingtonsUrl = "https://washingtonsfoco.com/events/";
+
+export const washingtonsArtistNameReducer: ArtistNameReducer = ($) => {
   const removeWhitespace = remove(/\n\t/g);
   const removeBoldNotation = remove(/\*{1,2}.+\*{1,2}\s+/g);
   const removeAnEveningWith = remove(/An Evening with /g);
   const removeSuffix = remove(/ –.+/g);
-  const removeAfterAmpersand = remove(/ &.+/g);
   const removeAfterAnd = remove(/ and .+/g);
   const removeAfterBand = remove(/ Band$/g);
 
@@ -60,8 +63,35 @@ export const washingtonArtistNameReducer: ArtistNameReducer = ($) => {
 
 export const washingtonsScrapper: Scrapper = () =>
   scrapperFactory(
-    "https://washingtonsfoco.com/events/",
-    washingtonArtistNameReducer,
+    washingtonsUrl,
+    washingtonsArtistNameReducer,
+  );
+// #endregion
+
+// #region Aggie Theater
+export const aggieTheaterUrl = "https://www.z2ent.com/aggie-theatre";
+
+export const aggieTheaterArtistNameReducer: ArtistNameReducer = ($) => {
+  const headings = $("h3.title > a");
+
+  const removeWith = remove(/ with .+/g);
+  const removeParenthesis = remove(/ \(.+\)+/g);
+  const removeAfterPlus = remove(/ \+.+/g);
+
+  const elementsToArtistNames = headings.toArray()
+    .map(extractHeading)
+    .map(removeWith)
+    .map(removeParenthesis)
+    .map(removeAfterAmpersand)
+    .map(removeAfterPlus);
+
+  return elementsToArtistNames;
+};
+
+export const aggieTheaterScrapper: Scrapper = () =>
+  scrapperFactory(
+    aggieTheaterUrl,
+    aggieTheaterArtistNameReducer,
   );
 // #endregion
 
@@ -69,8 +99,12 @@ export const scrapperMapFactory = () => {
   // create a map of scrappers, with the urls as the keys, and scrapper as the value
   const scrapperMap = new Map<string, Scrapper>();
   scrapperMap.set(
-    "https://washingtonsfoco.com/events/",
+    washingtonsUrl,
     washingtonsScrapper,
+  );
+  scrapperMap.set(
+    aggieTheaterUrl,
+    aggieTheaterScrapper,
   );
   return scrapperMap;
 };
