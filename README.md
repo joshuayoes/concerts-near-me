@@ -36,7 +36,7 @@ The url of the venue page you are attempting to scrape. However, only accept kno
 
 ## Running
 
-Once you have successfully created your authentication credentials, run `yarn start`. This will execute the `src/index.ts` file and create a playlist from using your Spotify account.
+Once you have successfully filled out the `.env` and `venues.json` files, run `yarn start`. This will execute the `src/index.ts` file and populate the venue playlists with artist songs using your Spotify account.
 
 ## Testing
 
