@@ -24,11 +24,14 @@ export type Scrapper = () => Promise<string[]>;
 // #endregion
 
 // #region Utilities
-const extractHeading = (node: Record<string, any>): string =>
-  "data" in node.children[0] ? (node.children[0] as any).data : "";
+const extractHeading = (node: Record<string, any>): string => {
+  return "data" in node.children[0] ? (node.children[0] as any).data : "";
+};
 
 const unique = (value: string, index: number, self: string[]) =>
   self.indexOf(value) === index;
+
+const matches = (regex: RegExp) => (string: string) => !regex.test(string);
 
 const remove = (regex: string | RegExp) =>
   (title: string) => title.replace(regex, "").trim();
@@ -40,6 +43,8 @@ const removeBoldNotation = remove(/\*{1,2}.+\*{1,2}\s?/g);
 const removeAnEveningWith = remove(/An Evening with /g);
 const removeAfterPlus = remove(/ \+.+/g);
 const removeAfterWith = remove(/ with .+/gi);
+const removeAfterColon = remove(/:.+/gi);
+const removeAfterAnd = remove(/ and .+/g);
 
 // #endregion
 
@@ -47,7 +52,6 @@ const removeAfterWith = remove(/ with .+/gi);
 const washingtonsUrl = "https://washingtonsfoco.com/events/";
 
 export const washingtonsArtistNameReducer: ArtistNameReducer = ($) => {
-  const removeAfterAnd = remove(/ and .+/g);
   const removeAfterBand = remove(/ Band$/g);
 
   const elementsToArtistNames = $("h2.font1by25.font1By5remMD").toArray()
@@ -105,10 +109,7 @@ export const roselandTheaterArtistNameReducer: ArtistNameReducer = ($) => {
 
   const removeAfterFeaturing = remove(/ (featuring|feat|ft\.).+/g);
   const removeInConcert = remove(/In Concert/gi);
-  const removeAfterColon = remove(/:.+/gi);
   const removeNorthAmericanTour = remove(/North American Tour/gi);
-
-  const matches = (regex: RegExp) => (string: string) => !regex.test(string);
 
   const elementsToArtistNames = headings.toArray()
     .map(extractHeading)
@@ -139,6 +140,38 @@ export const roselandTheaterScrapper: Scrapper = () =>
   );
 // #endregion
 
+// #region Red Rocks
+export const redRocksUrl = "https://www.redrocksonline.com/events/";
+
+export const redRocksArtistNameReducer: ArtistNameReducer = ($) => {
+  const headings = $("div#event-grid div.card-content > h3.card-title");
+
+  const removeDates = remove(/\d{1,2}\/\d{1,2}/g);
+  const remove3D = remove(/ 3-D/g);
+  const removeWithTheColoradoSymphony = remove(/ with The Colorado Symphony/g);
+
+  const elementsToArtistNames = headings.toArray()
+    .map(extractHeading)
+    .map(removeWhitespace)
+    .map(removeAfterColon)
+    .map(removeAfterAmpersand)
+    .map(removeAfterAnd)
+    .map(removeDates)
+    .map(remove3D)
+    .map(removeWithTheColoradoSymphony)
+    .filter(matches(/Global Dub/))
+    .filter(unique);
+
+  return elementsToArtistNames;
+};
+
+export const redRocksScrapper: Scrapper = () =>
+  scrapperFactory(
+    redRocksUrl,
+    redRocksArtistNameReducer,
+  );
+// #endregion
+
 export const scrapperMapFactory = () => {
   // create a map of scrappers, with the urls as the keys, and scrapper as the value
   const scrapperMap = new Map<string, Scrapper>();
@@ -153,6 +186,10 @@ export const scrapperMapFactory = () => {
   scrapperMap.set(
     roselandTheaterUrl,
     roselandTheaterScrapper,
+  );
+  scrapperMap.set(
+    redRocksUrl,
+    redRocksScrapper,
   );
   return scrapperMap;
 };

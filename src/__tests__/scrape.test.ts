@@ -3,6 +3,7 @@ import {
   aggieTheaterArtistNameReducer,
   ArtistNameReducer,
   getCherrio,
+  redRocksArtistNameReducer,
   roselandTheaterArtistNameReducer,
   washingtonsArtistNameReducer,
 } from "../scrape";
@@ -34,5 +35,13 @@ test(
   scrapperTestFactory(
     "roselandTheaterScrapper.html",
     roselandTheaterArtistNameReducer,
+  ),
+);
+
+test(
+  "redRocksScrapper reduces html to expected artist names",
+  scrapperTestFactory(
+    "redRocksScrapper.html",
+    redRocksArtistNameReducer,
   ),
 );
