@@ -27,20 +27,26 @@ export type Scrapper = () => Promise<string[]>;
 const extractHeading = (node: Record<string, any>): string =>
   "data" in node.children[0] ? (node.children[0] as any).data : "";
 
+const unique = (value: string, index: number, self: string[]) =>
+  self.indexOf(value) === index;
+
 const remove = (regex: string | RegExp) =>
   (title: string) => title.replace(regex, "").trim();
 
 const removeAfterAmpersand = remove(/ &.+/g);
+const removeWhitespace = remove(/\n\t/g);
+const removeSuffix = remove(/ –.+/g);
+const removeBoldNotation = remove(/\*{1,2}.+\*{1,2}\s?/g);
+const removeAnEveningWith = remove(/An Evening with /g);
+const removeAfterPlus = remove(/ \+.+/g);
+const removeAfterWith = remove(/ with .+/gi);
+
 // #endregion
 
 // #region Washingtons
 const washingtonsUrl = "https://washingtonsfoco.com/events/";
 
 export const washingtonsArtistNameReducer: ArtistNameReducer = ($) => {
-  const removeWhitespace = remove(/\n\t/g);
-  const removeBoldNotation = remove(/\*{1,2}.+\*{1,2}\s+/g);
-  const removeAnEveningWith = remove(/An Evening with /g);
-  const removeSuffix = remove(/ –.+/g);
   const removeAfterAnd = remove(/ and .+/g);
   const removeAfterBand = remove(/ Band$/g);
 
@@ -54,8 +60,6 @@ export const washingtonsArtistNameReducer: ArtistNameReducer = ($) => {
     .map(removeAfterAnd)
     .map(removeAfterBand);
 
-  const unique = (value: string, index: number, self: string[]) =>
-    self.indexOf(value) === index;
   const uniqueArtistNames = elementsToArtistNames.filter(unique);
 
   return uniqueArtistNames;
@@ -74,13 +78,11 @@ export const aggieTheaterUrl = "https://www.z2ent.com/aggie-theatre";
 export const aggieTheaterArtistNameReducer: ArtistNameReducer = ($) => {
   const headings = $("h3.title > a");
 
-  const removeWith = remove(/ with .+/g);
   const removeParenthesis = remove(/ \(.+\)+/g);
-  const removeAfterPlus = remove(/ \+.+/g);
 
   const elementsToArtistNames = headings.toArray()
     .map(extractHeading)
-    .map(removeWith)
+    .map(removeAfterWith)
     .map(removeParenthesis)
     .map(removeAfterAmpersand)
     .map(removeAfterPlus);
@@ -95,6 +97,48 @@ export const aggieTheaterScrapper: Scrapper = () =>
   );
 // #endregion
 
+// #region Roseland Theater
+export const roselandTheaterUrl = "https://roselandpdx.com/events/";
+
+export const roselandTheaterArtistNameReducer: ArtistNameReducer = ($) => {
+  const headings = $("a#eventTitle > h2");
+
+  const removeAfterFeaturing = remove(/ (featuring|feat|ft\.).+/g);
+  const removeInConcert = remove(/In Concert/gi);
+  const removeAfterColon = remove(/:.+/gi);
+  const removeNorthAmericanTour = remove(/North American Tour/gi);
+
+  const matches = (regex: RegExp) => (string: string) => !regex.test(string);
+
+  const elementsToArtistNames = headings.toArray()
+    .map(extractHeading)
+    .map(removeWhitespace)
+    .map(removeSuffix)
+    .map(removeBoldNotation)
+    .map(removeAnEveningWith)
+    .map(removeAfterFeaturing)
+    .map(removeInConcert)
+    .map(removeAfterAmpersand)
+    .map(removeAfterColon)
+    .map(removeAfterPlus)
+    .map(removeNorthAmericanTour)
+    .map(removeAfterWith)
+    .filter(matches(/Wrestling/))
+    .filter(matches(/Roseland/))
+    .filter(matches(/Heartbreak Jam/))
+    .filter(matches(/ Tour/))
+    .filter(unique);
+
+  return elementsToArtistNames;
+};
+
+export const roselandTheaterScrapper: Scrapper = () =>
+  scrapperFactory(
+    roselandTheaterUrl,
+    roselandTheaterArtistNameReducer,
+  );
+// #endregion
+
 export const scrapperMapFactory = () => {
   // create a map of scrappers, with the urls as the keys, and scrapper as the value
   const scrapperMap = new Map<string, Scrapper>();
@@ -105,6 +149,10 @@ export const scrapperMapFactory = () => {
   scrapperMap.set(
     aggieTheaterUrl,
     aggieTheaterScrapper,
+  );
+  scrapperMap.set(
+    roselandTheaterUrl,
+    roselandTheaterScrapper,
   );
   return scrapperMap;
 };

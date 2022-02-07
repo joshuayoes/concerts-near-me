@@ -3,6 +3,7 @@ import {
   aggieTheaterArtistNameReducer,
   ArtistNameReducer,
   getCherrio,
+  roselandTheaterArtistNameReducer,
   washingtonsArtistNameReducer,
 } from "../scrape";
 import { getLocalHtml } from "../utils";
@@ -25,5 +26,13 @@ test(
   scrapperTestFactory(
     "aggieTheaterScrapper.html",
     aggieTheaterArtistNameReducer,
+  ),
+);
+
+test(
+  "roselandTheaterScrapper reduces html to expected artist names",
+  scrapperTestFactory(
+    "roselandTheaterScrapper.html",
+    roselandTheaterArtistNameReducer,
   ),
 );
