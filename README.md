@@ -26,11 +26,11 @@ URI/URL for Spotify to send back your `ACCESS_TOKEN`. `http://localhost:8888/cal
 
 An array of venues to specify what web pages to scrape, and what playlists they should be added to.
 
-#### `playlistId`
+#### `playlistUrl`
 
-When you copy a link to a playlist, the `playlistId` is the last part of the URL. Example: `https://open.spotify.com/playlist/<playlistId>`
+A link to a playlist you want to add songs to. Example: `https://open.spotify.com/playlist/05j0D1858DymAMhXhQ6hsD?si=ecb86d98df5445af`
 
-#### `url`
+#### `venueUrl`
 
 The url of the venue page you are attempting to scrape. However, only accept known urls specified in `src/scrape.ts` will be accepted.
 
@@ -40,7 +40,7 @@ Once you have successfully filled out the `.env` and `venues.json` files, run `y
 
 ## Testing
 
-Run `yarn test` to run the test suite. This will run unit tests for the scraper reducers against local HTML files.
+Run `yarn test` to run the test suite. This will run unit tests for key functionality.
 
 ### Generating Mock Payloads
 
