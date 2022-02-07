@@ -61,7 +61,7 @@ export const addTracksToPlaylist = async (
   }
 
   logger.info(
-    `Added ${uris.length} tracks to playlist "spotify:playlist:${playlistId}"`,
+    `Added ${uris.length} tracks to playlist "https://open.spotify.com/playlist/${playlistId}"`,
   );
 };
 
@@ -107,7 +107,7 @@ export const emptyPlaylist = async (playlistId: string) => {
     }
 
     logger.info(
-      `Removed ${initalRes.body.total} tracks from playlist "spotify:playlist:${playlistId}"`,
+      `Removed ${initalRes.body.total} tracks from playlist "https://open.spotify.com/playlist/${playlistId}"`,
     );
   } catch (error) {
     if (error instanceof Error) {
