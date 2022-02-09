@@ -1,47 +1,14 @@
-import test, { ExecutionContext } from "ava";
-import {
-  aggieTheaterArtistNameReducer,
-  ArtistNameReducer,
-  getCherrio,
-  redRocksArtistNameReducer,
-  roselandTheaterArtistNameReducer,
-  washingtonsArtistNameReducer,
-} from "../scrape";
+import test from "ava";
+import { getCherrio, venues } from "../scrape";
 import { getLocalHtml } from "../utils";
 
-const scrapperTestFactory = (mockPath: string, reducer: ArtistNameReducer) =>
-  async (t: ExecutionContext<unknown>) => {
-    const html = await getLocalHtml(mockPath);
+const localFileName = (name: string) => `${name.replace(" ", "")}.html`;
+
+for (const venue of venues) {
+  test(`${venue.name} reducer reduces html to expected artist names`, async (t) => {
+    const html = await getLocalHtml(localFileName(venue.name));
     const $ = getCherrio(html);
-    const artistNames = reducer($);
+    const artistNames = venue.reducer($);
     t.snapshot(artistNames);
-  };
-
-test(
-  "washingtonsScrapper reduces html to expected artist names",
-  scrapperTestFactory("washingtonsScrapper.html", washingtonsArtistNameReducer),
-);
-
-test(
-  "aggieTheaterScrapper reduces html to expected artist names",
-  scrapperTestFactory(
-    "aggieTheaterScrapper.html",
-    aggieTheaterArtistNameReducer,
-  ),
-);
-
-test(
-  "roselandTheaterScrapper reduces html to expected artist names",
-  scrapperTestFactory(
-    "roselandTheaterScrapper.html",
-    roselandTheaterArtistNameReducer,
-  ),
-);
-
-test(
-  "redRocksScrapper reduces html to expected artist names",
-  scrapperTestFactory(
-    "redRocksScrapper.html",
-    redRocksArtistNameReducer,
-  ),
-);
+  });
+}

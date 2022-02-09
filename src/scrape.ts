@@ -2,28 +2,19 @@ import cheerio, { CheerioAPI } from "cheerio";
 import axios from "axios";
 
 // #region Core Library
-export type ArtistNameReducer = ($: CheerioAPI) => string[];
-
-type ScrapperFactory = (
-  concertCalendarUrl: string,
-  artistNameReducer: ArtistNameReducer,
-) => Promise<string[]>;
-
 export const getHtml = async (url: string): Promise<string> =>
   axios.get(url).then(({ data }) => data);
 
 export const getCherrio = (html: string): CheerioAPI => cheerio.load(html);
 
-const scrapperFactory: ScrapperFactory = async (url, reducer) => {
-  const html = await getHtml(url);
-  const $ = getCherrio(html);
-  return reducer($);
-};
-
-export type Scrapper = () => Promise<string[]>;
+export type ArtistNameReducer = ($: CheerioAPI) => string[];
 
 class Venue {
-  constructor(readonly url: string, readonly reducer: ArtistNameReducer) {}
+  constructor(
+    readonly name: string,
+    readonly url: string,
+    readonly reducer: ArtistNameReducer,
+  ) {}
 
   async scrape() {
     const html = await getHtml(this.url);
@@ -33,7 +24,6 @@ class Venue {
 }
 
 export const venues: Venue[] = [];
-
 // #endregion
 
 // #region Utilities
@@ -58,7 +48,6 @@ const removeAfterPlus = remove(/ \+.+/g);
 const removeAfterWith = remove(/ with .+/gi);
 const removeAfterColon = remove(/:.+/gi);
 const removeAfterAnd = remove(/ and .+/g);
-
 // #endregion
 
 // #region Washingtons
@@ -82,13 +71,11 @@ export const washingtonsArtistNameReducer: ArtistNameReducer = ($) => {
   return uniqueArtistNames;
 };
 
-export const washingtonsScrapper: Scrapper = () =>
-  scrapperFactory(
-    washingtonsUrl,
-    washingtonsArtistNameReducer,
-  );
-
-const Washingtons = new Venue(washingtonsUrl, washingtonsArtistNameReducer);
+const Washingtons = new Venue(
+  "Washingtons",
+  washingtonsUrl,
+  washingtonsArtistNameReducer,
+);
 venues.push(Washingtons);
 // #endregion
 
@@ -110,13 +97,11 @@ export const aggieTheaterArtistNameReducer: ArtistNameReducer = ($) => {
   return elementsToArtistNames;
 };
 
-export const aggieTheaterScrapper: Scrapper = () =>
-  scrapperFactory(
-    aggieTheaterUrl,
-    aggieTheaterArtistNameReducer,
-  );
-
-const AggieTheater = new Venue(aggieTheaterUrl, aggieTheaterArtistNameReducer);
+const AggieTheater = new Venue(
+  "Aggie Theater",
+  aggieTheaterUrl,
+  aggieTheaterArtistNameReducer,
+);
 venues.push(AggieTheater);
 // #endregion
 
@@ -152,13 +137,8 @@ export const roselandTheaterArtistNameReducer: ArtistNameReducer = ($) => {
   return elementsToArtistNames;
 };
 
-export const roselandTheaterScrapper: Scrapper = () =>
-  scrapperFactory(
-    roselandTheaterUrl,
-    roselandTheaterArtistNameReducer,
-  );
-
 const RoselandTheater = new Venue(
+  "Roseland Theater",
   roselandTheaterUrl,
   roselandTheaterArtistNameReducer,
 );
@@ -191,12 +171,6 @@ export const redRocksArtistNameReducer: ArtistNameReducer = ($) => {
   return elementsToArtistNames;
 };
 
-export const redRocksScrapper: Scrapper = () =>
-  scrapperFactory(
-    redRocksUrl,
-    redRocksArtistNameReducer,
-  );
-
-const RedRocks = new Venue(redRocksUrl, redRocksArtistNameReducer);
+const RedRocks = new Venue("Red Rocks", redRocksUrl, redRocksArtistNameReducer);
 venues.push(RedRocks);
 // #endregion
