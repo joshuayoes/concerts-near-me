@@ -4,7 +4,7 @@
   "description": "Create playlists based on upcoming concerts",
   "main": "src/index.ts",
   "scripts": {
-    "initialize": "cp .env.example .env && cp venues.example.json playlists.json",
+    "initialize": "cp .env.example .env && cp playlists.example.json playlists.json",
     "start": "ts-node src/index.ts",
     "serve": "ts-node src/express.ts",
     "test": "ava",
