@@ -4,7 +4,7 @@ Scape nearby concert venue websites and create spotify playlists with the top tr
 
 ## Authentication and Configuration
 
-Run `yarn initialize` to create an `.env` and `venue.json` file.
+Run `yarn initialize` to create an `.env` and `playlists.json` file.
 
 ### `.env`
 
@@ -22,9 +22,9 @@ Create an app in Spotify following [these steps](https://developer.spotify.com/d
 
 URI/URL for Spotify to send back your `ACCESS_TOKEN`. `http://localhost:8888/callback` by default, to be compatible with `yarn serve` script. Value must be set in [your Spotify app settings](https://developer.spotify.com/documentation/general/guides/authorization/app-settings/).
 
-### `venue.json`
+### `playlists.json`
 
-An array of venues to specify what web pages to scrape, and what playlists they should be added to.
+An array of playlists to specify what web pages to scrape, and what playlists they should be added to.
 
 #### `playlistUrl`
 
@@ -36,7 +36,7 @@ The url of the venue page you are attempting to scrape. However, only accept kno
 
 ## Running
 
-Once you have successfully filled out the `.env` and `venues.json` files, run `yarn start`. This will execute the `src/index.ts` file and populate the venue playlists with artist songs using your Spotify account.
+Once you have successfully filled out the `.env` and `playlists` files, run `yarn start`. This will execute the `src/index.ts` file and populate the venue playlists with artist songs using your Spotify account.
 
 ## Testing
 

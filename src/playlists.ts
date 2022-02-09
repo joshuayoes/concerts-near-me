@@ -3,20 +3,20 @@ import fs from "fs/promises";
 import paths from "path";
 import { ROOT_DIR } from "./utils";
 
-const VenueSchema = z.object({
+const PlaylistSchema = z.object({
   playlistUrl: z.string(),
   venueUrl: z.string(),
 });
 
-const VenuesSchema = z.array(VenueSchema);
+const PlaylistsSchema = z.array(PlaylistSchema);
 
-export const getVenues = async (jsonPath = "/venues.json") => {
+export const getPlaylists = async (jsonPath = "/playlists.json") => {
   const filePath = paths.join(ROOT_DIR, jsonPath);
 
   const buffer = await fs.readFile(filePath);
   const json: unknown = JSON.parse(buffer.toString());
 
-  return VenuesSchema.parse(json);
+  return PlaylistsSchema.parse(json);
 };
 
 export const extractPlaylistId = (playlistUrl: string) => {

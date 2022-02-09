@@ -1,5 +1,5 @@
 import test from "ava";
-import { extractPlaylistId } from "../venues";
+import { extractPlaylistId } from "../playlists";
 
 test("extractPlaylistId produces correct value", (t) => {
   const cases: { input: string; expected: string }[] = [

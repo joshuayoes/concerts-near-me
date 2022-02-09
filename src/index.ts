@@ -5,24 +5,24 @@ import {
   emptyPlaylist,
   getManyArtistsTopTracksBySearch,
 } from "./spotify";
-import { extractPlaylistId, getVenues } from "./venues";
+import { extractPlaylistId, getPlaylists } from "./playlists";
 
 (async () => {
-  const inputVenues = await getVenues();
+  const playlists = await getPlaylists();
 
-  for (const venue of inputVenues) {
-    const { venueUrl, playlistUrl } = venue;
+  for (const playlist of playlists) {
+    const { venueUrl, playlistUrl } = playlist;
     const playlistId = extractPlaylistId(playlistUrl);
 
-    const currentVenue = venues.find((v) => v.url === venueUrl);
+    const venue = venues.find((v) => v.url === venueUrl);
 
-    if (!currentVenue) {
+    if (!venue) {
       logger.warn(`No scrapper found for "${venueUrl}"`);
       continue;
     }
 
-    logger.info(`Scrapping "${venueUrl}"...`);
-    const artistsNames = await currentVenue.scrape();
+    logger.info(`Scrapping ${venue.name} at "${venueUrl}"...`);
+    const artistsNames = await venue.scrape();
     const allTopTrackUris = await getManyArtistsTopTracksBySearch(artistsNames);
     await emptyPlaylist(playlistId);
     await addTracksToPlaylist(playlistId, allTopTrackUris);
