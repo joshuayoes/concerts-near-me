@@ -21,6 +21,19 @@ const scrapperFactory: ScrapperFactory = async (url, reducer) => {
 };
 
 export type Scrapper = () => Promise<string[]>;
+
+class Venue {
+  constructor(readonly url: string, readonly reducer: ArtistNameReducer) {}
+
+  async scrape() {
+    const html = await getHtml(this.url);
+    const $ = getCherrio(html);
+    return this.reducer($);
+  }
+}
+
+export const venues: Venue[] = [];
+
 // #endregion
 
 // #region Utilities
@@ -74,6 +87,9 @@ export const washingtonsScrapper: Scrapper = () =>
     washingtonsUrl,
     washingtonsArtistNameReducer,
   );
+
+const Washingtons = new Venue(washingtonsUrl, washingtonsArtistNameReducer);
+venues.push(Washingtons);
 // #endregion
 
 // #region Aggie Theater
@@ -99,6 +115,9 @@ export const aggieTheaterScrapper: Scrapper = () =>
     aggieTheaterUrl,
     aggieTheaterArtistNameReducer,
   );
+
+const AggieTheater = new Venue(aggieTheaterUrl, aggieTheaterArtistNameReducer);
+venues.push(AggieTheater);
 // #endregion
 
 // #region Roseland Theater
@@ -138,6 +157,13 @@ export const roselandTheaterScrapper: Scrapper = () =>
     roselandTheaterUrl,
     roselandTheaterArtistNameReducer,
   );
+
+const RoselandTheater = new Venue(
+  roselandTheaterUrl,
+  roselandTheaterArtistNameReducer,
+);
+
+venues.push(RoselandTheater);
 // #endregion
 
 // #region Red Rocks
@@ -170,26 +196,7 @@ export const redRocksScrapper: Scrapper = () =>
     redRocksUrl,
     redRocksArtistNameReducer,
   );
-// #endregion
 
-export const scrapperMapFactory = () => {
-  // create a map of scrappers, with the urls as the keys, and scrapper as the value
-  const scrapperMap = new Map<string, Scrapper>();
-  scrapperMap.set(
-    washingtonsUrl,
-    washingtonsScrapper,
-  );
-  scrapperMap.set(
-    aggieTheaterUrl,
-    aggieTheaterScrapper,
-  );
-  scrapperMap.set(
-    roselandTheaterUrl,
-    roselandTheaterScrapper,
-  );
-  scrapperMap.set(
-    redRocksUrl,
-    redRocksScrapper,
-  );
-  return scrapperMap;
-};
+const RedRocks = new Venue(redRocksUrl, redRocksArtistNameReducer);
+venues.push(RedRocks);
+// #endregion

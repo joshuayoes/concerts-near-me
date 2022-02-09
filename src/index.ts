@@ -1,5 +1,5 @@
 import logger from "./logger";
-import { scrapperMapFactory } from "./scrape";
+import { venues } from "./scrape";
 import {
   addTracksToPlaylist,
   emptyPlaylist,
@@ -8,21 +8,21 @@ import {
 import { extractPlaylistId, getVenues } from "./venues";
 
 (async () => {
-  const venues = await getVenues();
-  const scrapperMap = scrapperMapFactory();
+  const inputVenues = await getVenues();
 
-  for (const venue of venues) {
+  for (const venue of inputVenues) {
     const { venueUrl, playlistUrl } = venue;
     const playlistId = extractPlaylistId(playlistUrl);
-    const scrapper = scrapperMap.get(venueUrl);
 
-    if (!scrapper) {
+    const currentVenue = venues.find((v) => v.url === venueUrl);
+
+    if (!currentVenue) {
       logger.warn(`No scrapper found for "${venueUrl}"`);
       continue;
     }
 
     logger.info(`Scrapping "${venueUrl}"...`);
-    const artistsNames = await scrapper();
+    const artistsNames = await currentVenue.scrape();
     const allTopTrackUris = await getManyArtistsTopTracksBySearch(artistsNames);
     await emptyPlaylist(playlistId);
     await addTracksToPlaylist(playlistId, allTopTrackUris);
