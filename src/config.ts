@@ -1,20 +1,24 @@
 import "dotenv/config";
 
 export default class Config {
-  static readonly clientId: string = this.isString(process.env.CLIENT_ID);
-  static readonly clientSecret: string = this.isString(
-    process.env.CLIENT_SECRET,
-  );
-  static readonly redirectUri: string = this.isString(process.env.REDIRECT_URI);
-  static readonly accessToken: string = this.isString(process.env.ACCESS_TOKEN);
+  static readonly clientId: string = this.env("CLIENT_ID");
+  static readonly clientSecret: string = this.env("CLIENT_SECRET");
+  static readonly redirectUri: string = this.env("REDIRECT_URI");
+  static readonly accessToken: string = this.env("ACCESS_TOKEN");
 
-  static isString(value: unknown): string {
+  static env(key: string): string {
+    const value: unknown = process.env[key];
+
     if (!value) {
-      throw new Error("Value is undefined");
+      throw new Error(`Value for ${key} in .env is "${typeof value}"`);
     }
+
     if (typeof value !== "string") {
-      throw new Error("Value is not a string");
+      throw new Error(
+        `Value for ${key} in .env is not a string, but "${typeof value}"`,
+      );
     }
+
     return value;
   }
 }
