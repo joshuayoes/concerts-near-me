@@ -3,13 +3,13 @@ import { getHtml } from "../scrape";
 import { MOCK_DIR } from "../utils";
 
 (async () => {
-  const [, , scrapperName, url] = process.argv;
+  const [, , venueName, url] = process.argv;
 
   const isString = (value: unknown): value is string =>
     typeof value === "string";
 
-  if (!isString(scrapperName)) {
-    console.error("Please provide a scrapper name");
+  if (!isString(venueName)) {
+    console.error("Please provide a camel case venue name");
     process.exit(1);
   }
   if (!isString(url)) {
@@ -17,9 +17,8 @@ import { MOCK_DIR } from "../utils";
     process.exit(1);
   }
 
+  const mockFilePath = `${MOCK_DIR}/${venueName}.html`;
   const html = await getHtml(url);
-
-  const mockFilePath = `${MOCK_DIR}/${scrapperName}.html`;
 
   await fs.writeFile(mockFilePath, html);
 })();
