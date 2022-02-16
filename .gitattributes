@@ -1,0 +1,2 @@
+# HTML files are effectively snapshots, and should not be included in github langauge statistics.
+*.html linguist-vendored
