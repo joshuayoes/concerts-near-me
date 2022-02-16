@@ -44,4 +44,4 @@ Run `yarn test` to run the test suite. This will run unit tests for key function
 
 ### Generating Mock Payloads
 
-For quickly developing HTML files to test against locally, utilize the `yarn generate-mock` script. It accepts two arguments: `scrapperName` and `url`. `scrapperName` should be the name of the scrapper that is being developed against, and will generate an HTML file in `src/__tests__/__mocks__` with the same name. `url` is the url of the website you want to scrape and get an HTML payload from. Example: `yarn generate-mock washingtonsScrapper https://washingtonsfoco.com/events/`
+For quickly developing HTML files to test against locally, utilize the `yarn generate-mock` script. It accepts two arguments: `venueName` and `url`. `venueName` should be the name of the venue in PascalCase, and will generate an HTML file in `src/__tests__/__mocks__` with the same name. `url` is the url of the website you want to scrape and get an HTML payload from. Example: `yarn generate-mock Washingtons https://washingtonsfoco.com/events/`
