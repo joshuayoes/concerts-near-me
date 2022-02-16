@@ -174,3 +174,35 @@ export const redRocksArtistNameReducer: ArtistNameReducer = ($) => {
 const RedRocks = new Venue("Red Rocks", redRocksUrl, redRocksArtistNameReducer);
 venues.push(RedRocks);
 // #endregion
+
+// #region Marquis Theater
+export const marquisTheaterUrl =
+  "https://www.livenation.com/venue/KovZpZAJeFkA/marquis-theater-events";
+
+export const marquisTheaterArtistNameReducer: ArtistNameReducer = ($) => {
+  const headings = $("div.listing__item__details  > header > h3");
+
+  const replace = (search: string, replacement: string) =>
+    (string: string) => string.replace(search, replacement);
+
+  const removeAfterDoubleQuotes = remove(/\".+/g);
+
+  const elementsToArtistNames = headings.toArray()
+    .map(extractHeading)
+    .map(replace("¥", "y"))
+    .map(replace("$", "s"))
+    .map(removeAfterDoubleQuotes)
+    .map(remove("Indie 102.3 Presents "))
+    .map(remove(" Tour Kickoff"))
+    .map(remove(" North America 2022"));
+
+  return elementsToArtistNames;
+};
+
+const MarquisTheater = new Venue(
+  "Marquis Theater",
+  marquisTheaterUrl,
+  marquisTheaterArtistNameReducer,
+);
+venues.push(MarquisTheater);
+// #endregion
