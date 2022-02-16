@@ -1,2 +1,2 @@
-# HTML files are effectively snapshots, and should not be included in github langauge statistics.
-*.html linguist-vendored
+# These HTML files are effectively snapshots, and should not be included in github langauge statistics.
+src/__tests__/__mocks__/*.html linguist-vendored
