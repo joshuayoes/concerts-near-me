@@ -55,7 +55,7 @@ export const addTracksToPlaylist = async (
       await api.addTracksToPlaylist(playlistId, chunk);
     } catch (error) {
       if (error instanceof Error) {
-        logger.error(error.message);
+        throw error;
       }
     }
   }
@@ -111,7 +111,7 @@ export const emptyPlaylist = async (playlistId: string) => {
     );
   } catch (error) {
     if (error instanceof Error) {
-      logger.error(error.message);
+      throw error;
     }
   }
 };
