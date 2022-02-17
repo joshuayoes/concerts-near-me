@@ -2,20 +2,27 @@ import cheerio, { CheerioAPI } from "cheerio";
 import axios from "axios";
 
 // #region Core Library
+/** Perform a GET request to URL and reutrn HTML payload */
 export const getHtml = async (url: string): Promise<string> =>
   axios.get(url).then(({ data }) => data);
 
+/** Get an instance of cherrio library */
 export const getCherrio = (html: string): CheerioAPI => cheerio.load(html);
 
+/** Contract for callback to reduce HTML page down to artist names */
 export type ArtistNameReducer = ($: CheerioAPI) => string[];
 
 class Venue {
   constructor(
+    /** Formated name of the venue for logging */
     readonly name: string,
+    /** URL of the venue website page to be scraped */
     readonly url: string,
+    /** Function that takes a cheerio instance and returns an array of artist names */
     readonly reducer: ArtistNameReducer,
   ) {}
 
+  /** Make a GET request to venue url and return a list of artist names that are performing */
   async scrape() {
     const html = await getHtml(this.url);
     const $ = getCherrio(html);
@@ -23,7 +30,10 @@ class Venue {
   }
 }
 
+/** Array of venues that can be scrapped */
 export const venues: Venue[] = [];
+export const findVenueByUrl = (url: string) =>
+  venues.find((v) => v.url === url);
 // #endregion
 
 // #region Utilities
