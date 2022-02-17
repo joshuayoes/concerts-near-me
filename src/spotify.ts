@@ -82,10 +82,10 @@ export const getManyArtistsTopTracksBySearch = async (names: string[]) => {
       allTopTrackUris.push(...topTrackUris);
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message.includes("expired")) {
-          throw error;
-        } else {
+        if (error.message.includes("not found")) {
           logger.warn(error.message);
+        } else {
+          throw error;
         }
       }
     }
