@@ -1,2 +1,4 @@
 # These HTML files are effectively snapshots, and should not be included in github langauge statistics.
 src/__tests__/__mocks__/*.html linguist-vendored
+# This file is here for documentation and easy initialization
+.env.example linguist-documentation
