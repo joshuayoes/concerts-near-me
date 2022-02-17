@@ -8,6 +8,8 @@ const PlaylistSchema = z.object({
   venueUrl: z.string(),
 });
 
+export type Playlist = z.TypeOf<typeof PlaylistSchema>;
+
 const PlaylistsSchema = z.array(PlaylistSchema);
 
 export const getPlaylists = async (jsonPath = "/playlists.json") => {
