@@ -8,11 +8,14 @@ const PlaylistSchema = z.object({
   venueUrl: z.string(),
 });
 
+/** Configuration entity to map the relationship between Spotify playlist and venue entity */
 export type Playlist = z.TypeOf<typeof PlaylistSchema>;
 
 const PlaylistsSchema = z.array(PlaylistSchema);
 
-export const getPlaylists = async (jsonPath = "/playlists.json") => {
+export const getPlaylists = async (
+  jsonPath = "/playlists.json",
+): Promise<Playlist[]> => {
   const filePath = paths.join(ROOT_DIR, jsonPath);
 
   const buffer = await fs.readFile(filePath);
@@ -21,7 +24,7 @@ export const getPlaylists = async (jsonPath = "/playlists.json") => {
   return PlaylistsSchema.parse(json);
 };
 
-export const extractPlaylistId = (playlistUrl: string) => {
+export const extractPlaylistId = (playlistUrl: string): string => {
   const regex = /https\:\/\/open\.spotify\.com\/playlist\/([\w\d]+)\?*.*/;
 
   const match = playlistUrl.match(regex);

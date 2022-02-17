@@ -12,6 +12,7 @@ export const getCherrio = (html: string): CheerioAPI => cheerio.load(html);
 /** Contract for callback to reduce HTML page down to artist names */
 export type ArtistNameReducer = ($: CheerioAPI) => string[];
 
+/** Entity to represent concert venues that are able to be scrapped */
 class Venue {
   constructor(
     /** Formated name of the venue for logging */
