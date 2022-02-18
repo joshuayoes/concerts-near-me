@@ -205,7 +205,8 @@ export const marquisTheaterArtistNameReducer: ArtistNameReducer = ($) => {
     .map(removeAfterDoubleQuotes)
     .map(remove("Indie 102.3 Presents "))
     .map(remove(" Tour Kickoff"))
-    .map(remove(" North America 2022"));
+    .map(remove(" North America 2022"))
+    .map(remove(" Spring Tour 2022"));
 
   return elementsToArtistNames;
 };
