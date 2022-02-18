@@ -10,7 +10,7 @@ export const getHtml = async (url: string): Promise<string> =>
 export const getCherrio = (html: string): CheerioAPI => cheerio.load(html);
 
 /** Contract for callback to reduce HTML page down to artist names */
-export type ArtistNameReducer = ($: CheerioAPI) => string[];
+type ArtistNameReducer = ($: CheerioAPI) => string[];
 
 /** Entity to represent concert venues that are able to be scrapped */
 class Venue {
@@ -64,7 +64,7 @@ const removeAfterAnd = remove(/ and .+/g);
 // #region Washingtons
 const washingtonsUrl = "https://washingtonsfoco.com/events/";
 
-export const washingtonsArtistNameReducer: ArtistNameReducer = ($) => {
+const washingtonsArtistNameReducer: ArtistNameReducer = ($) => {
   const removeAfterBand = remove(/ Band$/g);
 
   const elementsToArtistNames = $("h2.font1by25.font1By5remMD").toArray()
@@ -91,9 +91,9 @@ venues.push(Washingtons);
 // #endregion
 
 // #region Aggie Theater
-export const aggieTheaterUrl = "https://www.z2ent.com/aggie-theatre";
+const aggieTheaterUrl = "https://www.z2ent.com/aggie-theatre";
 
-export const aggieTheaterArtistNameReducer: ArtistNameReducer = ($) => {
+const aggieTheaterArtistNameReducer: ArtistNameReducer = ($) => {
   const headings = $("h3.title > a");
 
   const removeParenthesis = remove(/ \(.+\)+/g);
@@ -117,9 +117,9 @@ venues.push(AggieTheater);
 // #endregion
 
 // #region Roseland Theater
-export const roselandTheaterUrl = "https://roselandpdx.com/events/";
+const roselandTheaterUrl = "https://roselandpdx.com/events/";
 
-export const roselandTheaterArtistNameReducer: ArtistNameReducer = ($) => {
+const roselandTheaterArtistNameReducer: ArtistNameReducer = ($) => {
   const headings = $("a#eventTitle > h2");
 
   const removeAfterFeaturing = remove(/ (featuring|feat|ft\.).+/g);
@@ -158,9 +158,9 @@ venues.push(RoselandTheater);
 // #endregion
 
 // #region Red Rocks
-export const redRocksUrl = "https://www.redrocksonline.com/events/";
+const redRocksUrl = "https://www.redrocksonline.com/events/";
 
-export const redRocksArtistNameReducer: ArtistNameReducer = ($) => {
+const redRocksArtistNameReducer: ArtistNameReducer = ($) => {
   const headings = $("div#event-grid div.card-content > h3.card-title");
 
   const removeDates = remove(/\d{1,2}\/\d{1,2}/g);
@@ -187,10 +187,10 @@ venues.push(RedRocks);
 // #endregion
 
 // #region Marquis Theater
-export const marquisTheaterUrl =
+const marquisTheaterUrl =
   "https://www.livenation.com/venue/KovZpZAJeFkA/marquis-theater-events";
 
-export const marquisTheaterArtistNameReducer: ArtistNameReducer = ($) => {
+const marquisTheaterArtistNameReducer: ArtistNameReducer = ($) => {
   const headings = $("div.listing__item__details  > header > h3");
 
   const replace = (search: string, replacement: string) =>
