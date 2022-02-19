@@ -238,7 +238,8 @@ const wonderBallroomArtistNameReducer: ArtistNameReducer = ($) => {
     .map(removeAfterAmpersand)
     .map(removeAfterDash)
     .map(remove("The Marías Present: "))
-    .filter(matches(/Cancelled\: /));
+    .filter(matches(/Cancelled\: /))
+    .filter(unique);
 
   return elementsToArtistNames;
 };
