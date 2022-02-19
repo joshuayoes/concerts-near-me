@@ -59,6 +59,8 @@ const removeAfterPlus = remove(/ \+.+/g);
 const removeAfterWith = remove(/ with .+/gi);
 const removeAfterColon = remove(/:.+/gi);
 const removeAfterAnd = remove(/ and .+/g);
+const removeAfterDash = remove(/ (-|–) .+/g);
+const removeParenthesis = remove(/ \(.+\)+/g);
 // #endregion
 
 // #region Washingtons
@@ -95,8 +97,6 @@ const aggieTheaterUrl = "https://www.z2ent.com/aggie-theatre";
 
 const aggieTheaterArtistNameReducer: ArtistNameReducer = ($) => {
   const headings = $("h3.title > a");
-
-  const removeParenthesis = remove(/ \(.+\)+/g);
 
   const elementsToArtistNames = headings.toArray()
     .map(extractHeading)
@@ -217,4 +217,36 @@ const MarquisTheater = new Venue(
   marquisTheaterArtistNameReducer,
 );
 venues.push(MarquisTheater);
+// #endregion
+
+// #region Wonder Ballroom
+const wonderBallroomUrl = "https://wonderballroom.com/events/";
+
+const wonderBallroomArtistNameReducer: ArtistNameReducer = ($) => {
+  const headings = $("a#eventTitle > h2");
+
+  const removeAnyPresents = remove(/.+ Presents:? /);
+  const removeAfterWithSpecialGuest = remove(/ with Special Guest .+/gi);
+
+  const elementsToArtistNames = headings.toArray()
+    .map(extractHeading)
+    .map(removeWhitespace)
+    .map(removeAnyPresents)
+    .map(removeParenthesis)
+    .map(removeBoldNotation)
+    .map(removeAfterWithSpecialGuest)
+    .map(removeAfterAmpersand)
+    .map(removeAfterDash)
+    .map(remove("The Marías Present: "))
+    .filter(matches(/Cancelled\: /));
+
+  return elementsToArtistNames;
+};
+
+const WonderBallroom = new Venue(
+  "Wonder Ballroom",
+  wonderBallroomUrl,
+  wonderBallroomArtistNameReducer,
+);
+venues.push(WonderBallroom);
 // #endregion
