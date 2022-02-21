@@ -64,6 +64,7 @@ const removeAfterColon = remove(/:.+/gi);
 const removeAfterAnd = remove(/ and .+/g);
 const removeAfterDash = remove(/ (-|–) .+/g);
 const removeParenthesis = remove(/\(.+\)+/g);
+const removeAfterSlash = remove(/\/.+/gi);
 // #endregion
 
 // #region Washingtons
@@ -71,6 +72,7 @@ const washingtonsUrl = "https://washingtonsfoco.com/events/";
 
 const washingtonsArtistNameReducer: ArtistNameReducer = ($) => {
   const removeAfterBand = remove(/ Band$/g);
+  const removeAfterTrio = remove(/Trio .+/g);
 
   const elementsToArtistNames = $("h2.font1by25.font1By5remMD").toArray()
     .map(extractHeading)
@@ -80,7 +82,8 @@ const washingtonsArtistNameReducer: ArtistNameReducer = ($) => {
     .map(removeSuffix)
     .map(removeAfterAmpersand)
     .map(removeAfterAnd)
-    .map(removeAfterBand);
+    .map(removeAfterBand)
+    .map(removeAfterTrio);
 
   const uniqueArtistNames = elementsToArtistNames.filter(unique);
 
@@ -142,6 +145,7 @@ const roselandTheaterArtistNameReducer: ArtistNameReducer = ($) => {
     .map(removeAfterPlus)
     .map(removeNorthAmericanTour)
     .map(removeAfterWith)
+    .map(removeAfterSlash)
     .filter(matches(/Wrestling/))
     .filter(matches(/Roseland/))
     .filter(matches(/Heartbreak Jam/))
@@ -179,6 +183,7 @@ const redRocksArtistNameReducer: ArtistNameReducer = ($) => {
     .map(removeDates)
     .map(remove3D)
     .map(removeWithTheColoradoSymphony)
+    .map(removeAfterDash)
     .filter(matches(/Global Dub/))
     .filter(unique);
 
@@ -206,7 +211,8 @@ const marquisTheaterArtistNameReducer: ArtistNameReducer = ($) => {
     .map(remove("Indie 102.3 Presents "))
     .map(remove(" Tour Kickoff"))
     .map(remove(" North America 2022"))
-    .map(remove(" Spring Tour 2022"));
+    .map(remove(" Spring Tour 2022"))
+    .map(removeAfterSlash);
 
   return elementsToArtistNames;
 };
