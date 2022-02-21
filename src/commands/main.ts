@@ -9,9 +9,10 @@ import { extractPlaylistId, getPlaylists, Playlist } from "../playlists";
 
 interface Options {
   filter?: string;
+  dry?: boolean;
 }
 
-const updateAllPlaylists = async ({ filter }: Options = {}) => {
+const updateAllPlaylists = async ({ filter, dry }: Options = {}) => {
   const playlists = await getPlaylists();
 
   const updatePlaylist = async (playlist: Playlist) => {
@@ -28,6 +29,12 @@ const updateAllPlaylists = async ({ filter }: Options = {}) => {
     logger.info(`Scrapping ${venue.name} at "${venueUrl}"...`);
     const artistsNames = await venue.scrape();
     const allTopTrackUris = await getManyArtistsTopTracksBySearch(artistsNames);
+
+    if (dry) {
+      logger.info(`Dry run: not adding tracks to playlist`);
+      return;
+    }
+
     await emptyPlaylist(playlistId);
     await addTracksToPlaylist(playlistId, allTopTrackUris);
   };
