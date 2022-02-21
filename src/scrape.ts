@@ -47,6 +47,9 @@ const unique = (value: string, index: number, self: string[]) =>
 
 const matches = (regex: RegExp) => (string: string) => !regex.test(string);
 
+const replace = (search: string, replacement: string) =>
+  (string: string) => string.replace(search, replacement);
+
 const remove = (regex: string | RegExp) =>
   (title: string) => title.replace(regex, "").trim();
 
@@ -54,13 +57,13 @@ const removeAfterAmpersand = remove(/ &.+/g);
 const removeWhitespace = remove(/\n\t/g);
 const removeSuffix = remove(/ –.+/g);
 const removeBoldNotation = remove(/\*{1,2}.+\*{1,2}\s?/g);
-const removeAnEveningWith = remove(/An Evening with /g);
+const removeAnEveningWith = remove(/An Evening with /gi);
 const removeAfterPlus = remove(/ \+.+/g);
 const removeAfterWith = remove(/ with .+/gi);
 const removeAfterColon = remove(/:.+/gi);
 const removeAfterAnd = remove(/ and .+/g);
 const removeAfterDash = remove(/ (-|–) .+/g);
-const removeParenthesis = remove(/ \(.+\)+/g);
+const removeParenthesis = remove(/\(.+\)+/g);
 // #endregion
 
 // #region Washingtons
@@ -193,9 +196,6 @@ const marquisTheaterUrl =
 const marquisTheaterArtistNameReducer: ArtistNameReducer = ($) => {
   const headings = $("div.listing__item__details  > header > h3");
 
-  const replace = (search: string, replacement: string) =>
-    (string: string) => string.replace(search, replacement);
-
   const removeAfterDoubleQuotes = remove(/\".+/g);
 
   const elementsToArtistNames = headings.toArray()
@@ -250,4 +250,38 @@ const WonderBallroom = new Venue(
   wonderBallroomArtistNameReducer,
 );
 venues.push(WonderBallroom);
+// #endregion
+
+// #region Crystal Ballroom
+const crystalBallroomUrl =
+  "https://www.crystalballroompdx.com/events/search/Any?joint_name=Crystal+Ballroom&location_id=2";
+
+const crystalBallroomArtistNameReducer: ArtistNameReducer = ($) => {
+  const headings = $(".upcoming-events-wrapper h1.billing > a");
+
+  const removeNthAnniversary = remove(/\d+th Anniversary/gi);
+  const removeRescheduled = remove("Rescheduled: ");
+
+  const elementsToArtistNames = headings.toArray()
+    .map(extractHeading)
+    .map(removeWhitespace)
+    .map(removeParenthesis)
+    .map(removeNthAnniversary)
+    .map(removeAnEveningWith)
+    .map(removeRescheduled)
+    .map(replace("& The Juice", "& Special Sauce"))
+    .map(remove("Returns:  Thank Fucking God"))
+    .map(remove("and The Violators"))
+    .filter(unique)
+    .filter(Boolean);
+
+  return elementsToArtistNames;
+};
+
+const CrystalBallroom = new Venue(
+  "Crystal Ballroom",
+  crystalBallroomUrl,
+  crystalBallroomArtistNameReducer,
+);
+venues.push(CrystalBallroom);
 // #endregion
