@@ -5,9 +5,10 @@
   "main": "src/index.ts",
   "scripts": {
     "initialize": "cp .env.example .env && cp playlists.example.json playlists.json",
-    "start": "ts-node src/index.ts",
+    "start": "yarn update-auth && yarn main",
     "serve": "ts-node src/express.ts",
     "auth": "ts-node src/commands/auth.ts",
+    "main": "ts-node src/index.ts",
     "update-auth": "start-server-and-test serve http://localhost:8888 auth",
     "test": "ava",
     "generate-mock": "ts-node src/bin/generate-mock-scrape-payloads.ts"
