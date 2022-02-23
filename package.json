@@ -8,6 +8,7 @@
     "start": "ts-node src/index.ts",
     "serve": "ts-node src/express.ts",
     "auth": "ts-node src/commands/auth.ts",
+    "update-auth": "start-server-and-test serve http://localhost:8888 auth",
     "test": "ava",
     "generate-mock": "ts-node src/bin/generate-mock-scrape-payloads.ts"
   },
@@ -41,6 +42,7 @@
     "@types/spotify-web-api-node": "^5.0.6",
     "@types/yargs": "^17.0.8",
     "ava": "^4.0.1",
+    "start-server-and-test": "^1.14.0",
     "ts-node": "^10.4.0"
   },
   "ava": {
