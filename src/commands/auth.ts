@@ -24,7 +24,7 @@ const getToken = async (): Promise<string | undefined> => {
     logger.info("Launched browser");
     const page = await browser.newPage();
     await page.goto(url);
-    logger.info(`Navigated to ${url}`);
+    logger.info(`Navigated to "${url}"`);
     await page.type("input#login-username", username);
     await page.type("input#login-password", password);
     await page.click("button#login-button");
@@ -32,14 +32,15 @@ const getToken = async (): Promise<string | undefined> => {
 
     const response = await page.content();
     const extractToken = (str: string) => str.match(/"token":"([\w|-]+)"/)![1];
-    logger.info(`Extracted token from response`);
     token = extractToken(response);
+    logger.info(`Extracted token from server`);
   } catch (error) {
     if (error instanceof Error) {
       logger.error(error.message);
     }
   } finally {
     await browser?.close();
+    logger.info(`Closed browser`);
   }
 
   return token;
