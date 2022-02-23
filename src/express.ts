@@ -1,6 +1,7 @@
 import express from "express";
 import request from "request";
 import Config from "./config";
+import logger from "./logger";
 
 var client_id = Config.CLIENT_ID;
 var client_secret = Config.CLIENT_SECRET;
@@ -57,7 +58,9 @@ app.get("/callback", function (req, res) {
       if (!error) {
         const token = body.access_token;
         res.json({ token });
-        console.log(token);
+        logger.info(
+          `Successfully recieved accessToken: "${token.substring(0, 10)}..."`,
+        );
       } else {
         console.error(error);
       }
@@ -70,6 +73,8 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Listening on http://${HOST}:${PORT}...`);
-  console.log(`Registered: ${URL}/login`);
+  logger.info(`Listening on http://${HOST}:${PORT}...`);
+  logger.info(`Registered: ${URL}/`);
+  logger.info(`Registered: ${URL}/login`);
+  logger.info(`Registered: ${URL}/callback`);
 });
