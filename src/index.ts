@@ -1,12 +1,11 @@
-import yargs from "yargs";
-import { hideBin } from "yargs/helpers";
 import updateAllPlaylists from "./commands/main";
+import { argvFactory } from "./utils";
 
 (async () => {
-  const argv = yargs(hideBin(process.argv)).options({
+  const argv = argvFactory({
     filter: { type: "string" },
     dry: { type: "boolean", default: false },
-  }).parseSync();
+  });
 
   await updateAllPlaylists({ filter: argv?.filter, dry: argv?.dry });
 })();
