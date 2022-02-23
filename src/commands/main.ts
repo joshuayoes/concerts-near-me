@@ -6,6 +6,7 @@ import {
   getManyArtistsTopTracksBySearch,
 } from "../spotify";
 import { extractPlaylistId, getPlaylists, Playlist } from "../playlists";
+import { argvFactory } from "../utils";
 
 interface Options {
   filter?: string;
@@ -50,4 +51,11 @@ const updateAllPlaylists = async ({ filter, dry }: Options = {}) => {
   }
 };
 
-export default updateAllPlaylists;
+(async () => {
+  const argv = argvFactory({
+    filter: { type: "string" },
+    dry: { type: "boolean", default: false },
+  });
+
+  await updateAllPlaylists({ filter: argv?.filter, dry: argv?.dry });
+})();
