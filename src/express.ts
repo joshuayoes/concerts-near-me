@@ -65,6 +65,10 @@ app.get("/callback", function (req, res) {
   }
 });
 
+app.get("/", (req, res) => {
+  res.sendStatus(200);
+});
+
 app.listen(PORT, () => {
   console.log(`Listening on http://${HOST}:${PORT}...`);
   console.log(`Registered: ${URL}/login`);
