@@ -17,8 +17,11 @@ const env = (key: string): string => {
 };
 
 export default class Config {
-  static readonly clientId: string = env("CLIENT_ID");
-  static readonly clientSecret: string = env("CLIENT_SECRET");
-  static readonly redirectUri: string = env("REDIRECT_URI");
-  static readonly accessToken: string = env("ACCESS_TOKEN");
+  static readonly ACCESS_TOKEN: string = env("ACCESS_TOKEN");
+  static readonly CLIENT_ID: string = env("CLIENT_ID");
+  static readonly CLIENT_SECRET: string = env("CLIENT_SECRET");
+  static readonly LOGIN_URL: string = env("LOGIN_URL");
+  static readonly REDIRECT_URI: string = env("REDIRECT_URI");
+  static readonly SPOTIFY_LOGIN: string = env("SPOTIFY_LOGIN");
+  static readonly SPOTIFY_PASSWORD: string = env("SPOTIFY_PASSWORD");
 }
