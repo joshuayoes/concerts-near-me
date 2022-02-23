@@ -49,7 +49,7 @@ app.get("/callback", function (req, res) {
       },
       headers: {
         "Authorization": "Basic " +
-          (new Buffer(client_id + ":" + client_secret).toString("base64")),
+          (Buffer.from(client_id + ":" + client_secret).toString("base64")),
       },
       json: true,
     };
@@ -73,8 +73,8 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  logger.info(`Listening on http://${HOST}:${PORT}...`);
-  logger.info(`Registered: ${URL}/`);
-  logger.info(`Registered: ${URL}/login`);
-  logger.info(`Registered: ${URL}/callback`);
+  logger.info(`Listening on "http://${HOST}:${PORT}"...`);
+  logger.info(`Registered: "${URL}/"`);
+  logger.info(`Registered: "${URL}/login"`);
+  logger.info(`Registered: "${URL}/callback"`);
 });
