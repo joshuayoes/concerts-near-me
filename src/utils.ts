@@ -12,6 +12,6 @@ export const getLocalHtml = async (fileName: string) => {
   return html;
 };
 
-export const argvFactory = <Schema extends Record<string, yargs.Options>>(
-  schema: Schema,
-) => yargs(hideBin(process.argv)).options(schema).parseSync();
+export const argvFactory = <Options extends Record<string, yargs.Options>>(
+  options: Options,
+) => yargs(hideBin(process.argv)).options(options).parseSync();
