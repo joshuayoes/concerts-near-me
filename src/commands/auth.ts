@@ -6,8 +6,9 @@ import Config from "../config";
 import { argvFactory, ROOT_DIR } from "../utils";
 import logger from "../logger";
 
-(async () => {
+const getToken = async (): Promise<string | undefined> => {
   let browser: puppeteer.Browser | undefined = undefined;
+  let token: string | undefined = undefined;
 
   try {
     // Get accessToken from Spotify using proxy server
@@ -20,8 +21,10 @@ import logger from "../logger";
       ignoreDefaultArgs: ["--disable-extensions", "--no-sandbox"],
       headless: argv.headless,
     });
+    logger.info("Launched browser");
     const page = await browser.newPage();
     await page.goto(url);
+    logger.info(`Navigated to ${url}`);
     await page.type("input#login-username", username);
     await page.type("input#login-password", password);
     await page.click("button#login-button");
@@ -29,20 +32,35 @@ import logger from "../logger";
 
     const response = await page.content();
     const extractToken = (str: string) => str.match(/"token":"([\w|-]+)"/)![1];
-    const token = extractToken(response);
-
-    // Write new ACCESS_TOKEN to .env file
-    const envJson = { ...Config };
-    envJson.ACCESS_TOKEN = token;
-
-    const envFileString = stringify(envJson);
-    const envFilePath = `${ROOT_DIR}.env`;
-    await fs.writeFile(envFilePath, envFileString);
+    logger.info(`Extracted token from response`);
+    token = extractToken(response);
   } catch (error) {
     if (error instanceof Error) {
       logger.error(error.message);
     }
   } finally {
     await browser?.close();
+  }
+
+  return token;
+};
+
+const updateEnvfile = async (token: string) => {
+  // Write new ACCESS_TOKEN to .env file
+  const envJson = { ...Config };
+  envJson.ACCESS_TOKEN = token;
+
+  const envFileString = stringify(envJson);
+  const envFilePath = `${ROOT_DIR}.env`;
+  await fs.writeFile(envFilePath, envFileString);
+  logger.info("Successfully updated .env file");
+};
+
+(async () => {
+  const token = await getToken();
+  if (token) {
+    await updateEnvfile(token);
+  } else {
+    logger.error("Failed to get access token");
   }
 })();
