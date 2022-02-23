@@ -8,7 +8,7 @@
     "start": "yarn update-auth && yarn main",
     "serve": "ts-node src/express.ts",
     "auth": "ts-node src/commands/auth.ts",
-    "main": "ts-node src/index.ts",
+    "main": "ts-node src/commands/main.ts",
     "update-auth": "start-server-and-test serve http://localhost:8888 auth",
     "test": "ava",
     "generate-mock": "ts-node src/bin/generate-mock-scrape-payloads.ts"
