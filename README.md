@@ -12,15 +12,27 @@ Run `yarn initialize` to create an `.env` and `playlists.json` file.
 
 Run `yarn serve` and then visit `localhost:8888/login`. This will prompt you to login to your Spotify account. Once you have successfully logged in, grab the token from the JSON response, and paste it in your `.env` file.
 
-*TODO*: Make this process automatic without the need for a private server.
+This can also be done automatically by running `yarn auth`.
 
 #### CLIENT_ID and CLIENT_SECRET
 
 Create an app in Spotify following [these steps](https://developer.spotify.com/documentation/general/guides/authorization/app-settings/). Add the CLIENT_ID and CLIENT_SECRET values to your `.env` file.
 
+#### LOGIN_URL
+
+URL to start login flow to access `ACCESS_TOKEN`. `http://localhost:8888/login` by default, to be compatible with `yarn serve` script.
+
 #### REDIRECT_URI
 
 URI/URL for Spotify to send back your `ACCESS_TOKEN`. `http://localhost:8888/callback` by default, to be compatible with `yarn serve` script. Value must be set in [your Spotify app settings](https://developer.spotify.com/documentation/general/guides/authorization/app-settings/).
+
+#### SPOTIFY_LOGIN
+
+Your Spotify account login email or username. Utilized by `yarn auth` script to login to your spotify account via a headless browser.
+
+#### SPOTIFY_PASSWORD
+
+Your Spotify password. Utilized by `yarn auth` script to login to your spotify account via a headless browser.
 
 ### `playlists.json`
 
@@ -36,7 +48,7 @@ The url of the venue page you are attempting to scrape. However, only accept kno
 
 ## Running
 
-Once you have successfully filled out the `.env` and `playlists` files, run `yarn start`. This will execute the `src/index.ts` file and populate the venue playlists with artist songs using your Spotify account.
+Once you have successfully filled out the `.env` and `playlists` files, run `yarn start`. This will execute `src/commands/auth.ts` and then `src/commands/main.ts` to populate the venue playlists with artist songs using your Spotify account.
 
 ## Testing
 
