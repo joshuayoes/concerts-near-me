@@ -212,7 +212,8 @@ const marquisTheaterArtistNameReducer: ArtistNameReducer = ($) => {
     .map(remove(" Tour Kickoff"))
     .map(remove(" North America 2022"))
     .map(remove(" Spring Tour 2022"))
-    .map(removeAfterSlash);
+    .map(removeAfterSlash)
+    .map(removeAfterDash);
 
   return elementsToArtistNames;
 };
