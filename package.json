@@ -2,7 +2,7 @@
   "name": "concerts-near-me",
   "version": "1.0.0",
   "description": "Create playlists based on upcoming concerts",
-  "main": "src/index.ts",
+  "main": "src/commands/main.ts",
   "scripts": {
     "initialize": "cp .env.example .env && cp playlists.example.json playlists.json",
     "start": "yarn update-auth && yarn main",
