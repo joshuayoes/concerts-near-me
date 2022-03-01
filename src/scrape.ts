@@ -73,6 +73,7 @@ const washingtonsUrl = "https://washingtonsfoco.com/events/";
 const washingtonsArtistNameReducer: ArtistNameReducer = ($) => {
   const removeAfterBand = remove(/ Band$/g);
   const removeAfterTrio = remove(/Trio .+/g);
+  const removeQuintet = remove(/Quintet/g);
 
   const elementsToArtistNames = $("h2.font1by25.font1By5remMD").toArray()
     .map(extractHeading)
@@ -82,7 +83,8 @@ const washingtonsArtistNameReducer: ArtistNameReducer = ($) => {
     .map(removeSuffix)
     .map(removeAfterAnd)
     .map(removeAfterBand)
-    .map(removeAfterTrio);
+    .map(removeAfterTrio)
+    .map(removeQuintet);
 
   const uniqueArtistNames = elementsToArtistNames.filter(unique);
 
