@@ -32,7 +32,7 @@ const updateAllPlaylists = async ({ filter, dry }: Options = {}) => {
     const allTopTrackUris = await getManyArtistsTopTracksBySearch(artistsNames);
 
     if (dry) {
-      logger.info(`Dry run: not adding tracks to playlist`);
+      logger.info(`Dry Run: not adding tracks to playlist`);
       return;
     }
 
