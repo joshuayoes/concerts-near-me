@@ -2,11 +2,13 @@ import api from "./api";
 import logger from "./logger";
 
 export const getArtistBySearch = async (query: string) => {
-  const res = await api.search(query, ["artist"]);
-  const [artist] = res.body.artists?.items ?? [];
-  if (!artist) {
-    throw Error(`"${query}" was not found on Spotify`);
-  }
+  const res = await api.search(query, ["artist"], { market: "US" });
+
+  const artists = res.body.artists?.items ?? [];
+  const exactName = ({ name }: SpotifyApi.ArtistObjectFull): boolean =>
+    name.toLowerCase() === query.toLowerCase();
+  const artist = artists.find(exactName) ?? artists[0];
+  if (!artist) throw Error(`"${query}" was not found on Spotify`);
 
   const message = query === artist.name
     ? `Found "${artist.name}" on Spotify`
