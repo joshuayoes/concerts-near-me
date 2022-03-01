@@ -80,7 +80,6 @@ const washingtonsArtistNameReducer: ArtistNameReducer = ($) => {
     .map(removeBoldNotation)
     .map(removeAnEveningWith)
     .map(removeSuffix)
-    .map(removeAfterAmpersand)
     .map(removeAfterAnd)
     .map(removeAfterBand)
     .map(removeAfterTrio);
