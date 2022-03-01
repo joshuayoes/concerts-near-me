@@ -68,7 +68,7 @@ const removeAfterSlash = remove(/\/.+/gi);
 // #endregion
 
 // #region Washingtons
-const washingtonsUrl = "https://washingtonsfoco.com/";
+const washingtonsUrl = "https://washingtonsfoco.com/events/";
 
 const washingtonsArtistNameReducer: ArtistNameReducer = ($) => {
   const removeAfterBand = remove(/ Band$/g);
