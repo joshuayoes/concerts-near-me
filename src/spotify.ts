@@ -1,18 +1,20 @@
 import api from "./api";
 import logger from "./logger";
+import { artistNameOverridesMap } from "./utils";
 
 export const getArtistBySearch = async (query: string) => {
-  const res = await api.search(query, ["artist"], { market: "US" });
+  const artistName = artistNameOverridesMap.get(query) ?? query;
+  const res = await api.search(artistName, ["artist"], { market: "US" });
 
   const artists = res.body.artists?.items ?? [];
-  const exactName = ({ name }: SpotifyApi.ArtistObjectFull): boolean =>
-    name.toLowerCase() === query.toLowerCase();
+  const exactName = (a: SpotifyApi.ArtistObjectFull): boolean =>
+    a.name.toLowerCase() === artistName.toLowerCase();
   const artist = artists.find(exactName) ?? artists[0];
-  if (!artist) throw Error(`"${query}" was not found on Spotify`);
+  if (!artist) throw Error(`"${artistName}" was not found on Spotify`);
 
-  const message = query === artist.name
+  const message = artistName === artist.name
     ? `Found "${artist.name}" on Spotify`
-    : `Found "${query}" as "${artist.name}" on Spotify`;
+    : `Found "${artistName}" as "${artist.name}" on Spotify`;
   logger.info(message);
   return artist;
 };
@@ -28,8 +30,18 @@ export const createPlaylist = async (name: string, description = "") => {
   return res.body.id;
 };
 
-export const getTopTracksIds = async (artistId: string, maxSize = 5) => {
+export const getTopTracksIds = async (
+  artistId: string,
+  maxSize = 5,
+  /** Non-essential value, only for logging*/
+  artistName?: string,
+) => {
   const tracks = await api.getArtistTopTracks(artistId, "US");
+  if (tracks.body.tracks.length < maxSize) {
+    logger.warn(
+      `Only ${tracks.body.tracks.length} tracks found for "${artistName}", not ${maxSize}`,
+    );
+  }
   return tracks.body.tracks.map(({ id }) => id).filter((_, index) =>
     index < maxSize
   );
@@ -69,7 +81,7 @@ export const addTracksToPlaylist = async (
 
 export const getArtistTopTracksBySearch = async (name: string) => {
   const artist = await getArtistBySearch(name);
-  const topTracksIds = await getTopTracksIds(artist.id);
+  const topTracksIds = await getTopTracksIds(artist.id, 5, artist.name);
   const topTracksUris = topTracksIds.map((id) => `spotify:track:${id}`);
   return topTracksUris;
 };

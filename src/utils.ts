@@ -17,3 +17,14 @@ export const argvFactory = <Options extends Record<string, yargs.Options>>(
 ) => yargs(hideBin(process.argv)).options(options).parseSync();
 
 export const toAsterisks = (secret: string) => "*".repeat(secret.length);
+
+/**
+ * Sometimes the limitations of the artist name reducers cannot be overcome,
+ * so we must override a query with the correct artist name in Spotify
+ */
+export const artistNameOverridesMap = new Map<string, string>()
+  .set("G. Love", "G. Love & Special Sauce")
+  .set("Graham Good", "Graham Good and the Painters")
+  .set("OMD", "Orchestral Manoeuvres In The Dark")
+  .set("Big Head Todd", "Big Head Todd and the Monsters")
+  .set("K. Flay", "K.Flay");
