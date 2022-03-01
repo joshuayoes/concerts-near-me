@@ -25,6 +25,6 @@ export const toAsterisks = (secret: string) => "*".repeat(secret.length);
 export const artistNameOverridesMap = new Map<string, string>()
   .set("G. Love", "G. Love & Special Sauce")
   .set("Graham Good", "Graham Good and the Painters")
-  .set("OMD", "Orchestral Manoeuvres In The Dark")
+  .set("Omd", "Orchestral Manoeuvres In The Dark")
   .set("Big Head Todd", "Big Head Todd and the Monsters")
   .set("K. Flay", "K.Flay");

@@ -53,6 +53,11 @@ const replace = (search: string, replacement: string) =>
 const remove = (regex: string | RegExp) =>
   (title: string) => title.replace(regex, "").trim();
 
+const toPascalCase = (value: string) =>
+  value.toLowerCase().split(" ").map((word) =>
+    word.charAt(0).toUpperCase() + word.toLowerCase().slice(1)
+  ).join(" ");
+
 const removeAfterAmpersand = remove(/ &.+/g);
 const removeWhitespace = remove(/\n\t/g);
 const removeSuffix = remove(/ –.+/g);
@@ -147,6 +152,7 @@ const roselandTheaterArtistNameReducer: ArtistNameReducer = ($) => {
     .map(removeNorthAmericanTour)
     .map(removeAfterWith)
     .map(removeAfterSlash)
+    .map(toPascalCase)
     .filter(matches(/Wrestling/))
     .filter(matches(/Roseland/))
     .filter(matches(/Heartbreak Jam/))
@@ -246,6 +252,7 @@ const wonderBallroomArtistNameReducer: ArtistNameReducer = ($) => {
     .map(removeAfterAmpersand)
     .map(removeAfterDash)
     .map(remove("The Marías Present: "))
+    .map(toPascalCase)
     .filter(matches(/Cancelled\: /))
     .filter(unique);
 
