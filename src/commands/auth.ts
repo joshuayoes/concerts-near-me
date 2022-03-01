@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 import { stringify } from "envfile";
 
 import Config from "../config";
-import { argvFactory, ROOT_DIR } from "../utils";
+import { argvFactory, ROOT_DIR, toAsterisks } from "../utils";
 import logger from "../logger";
 
 const getToken = async (): Promise<string | undefined> => {
@@ -26,14 +26,18 @@ const getToken = async (): Promise<string | undefined> => {
     await page.goto(url);
     logger.info(`Navigated to "${url}"`);
     await page.type("input#login-username", username);
+    logger.info(`Inputed username: "${username}"`);
     await page.type("input#login-password", password);
+    logger.info(`Inputed password: "${toAsterisks(password)}"`);
     await page.click("button#login-button");
+    logger.info(`Clicked submit button`);
     await page.waitForNavigation();
 
     const response = await page.content();
+    logger.info(`Recieved page response`);
     const extractToken = (str: string) => str.match(/"token":"([\w|-]+)"/)![1];
     token = extractToken(response);
-    logger.info(`Extracted token from server`);
+    logger.info(`Extracted token from response`);
   } catch (error) {
     if (error instanceof Error) {
       logger.error(error.message);
@@ -54,7 +58,7 @@ const updateEnvfile = async (token: string) => {
   const envFileString = stringify(envJson);
   const envFilePath = `${ROOT_DIR}.env`;
   await fs.writeFile(envFilePath, envFileString);
-  logger.info("Successfully updated .env file");
+  logger.info(`Successfully updated .env file at "${envFilePath}"`);
 };
 
 (async () => {

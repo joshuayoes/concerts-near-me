@@ -15,3 +15,5 @@ export const getLocalHtml = async (fileName: string) => {
 export const argvFactory = <Options extends Record<string, yargs.Options>>(
   options: Options,
 ) => yargs(hideBin(process.argv)).options(options).parseSync();
+
+export const toAsterisks = (secret: string) => "*".repeat(secret.length);
