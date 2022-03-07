@@ -10,8 +10,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: Production
-
-
+    env:
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+      LOGIN_URL: ${{ secrets.LOGIN_URL }}
+      REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
+      SPOTIFY_LOGIN: ${{ secrets.SPOTIFY_LOGIN }}
+      SPOTIFY_PASSWORD: ${{ secrets.SPOTIFY_PASSWORD }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
