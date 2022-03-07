@@ -18,3 +18,5 @@ jobs:
           cache: 'yarn'
       - run: yarn install --frozen-lockfile 
       - run: yarn test
+      - run: cp playlists.ci.json playlists.json
+      - run: yarn start
