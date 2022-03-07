@@ -13,9 +13,12 @@ export interface EnvironmentVariables {
 type EnvKey = keyof EnvironmentVariables;
 
 export default class Config {
+  static CI: boolean = Boolean(process.env.CI ?? "false");
+
   static get(key: EnvKey): string;
   static get(key: EnvKey, options: { required: false }): string | undefined;
   static get(key: EnvKey, options: { required: true }): string;
+  static get(key: EnvKey, options: { required: boolean }): string | undefined;
   static get(key: EnvKey, options?: { required: boolean }): string | undefined {
     const value: unknown = process.env[key];
     const { required = true } = options ?? {};
