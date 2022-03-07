@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import puppeteer from "puppeteer";
 import { stringify } from "envfile";
 
-import Config from "../config";
+import Config, { EnvironmentVariables } from "../config";
 import { argvFactory, ROOT_DIR, toAsterisks } from "../utils";
 import logger from "../logger";
 
@@ -12,9 +12,9 @@ const getToken = async (): Promise<string | undefined> => {
 
   try {
     // Get accessToken from Spotify using proxy server
-    const username = Config.SPOTIFY_LOGIN;
-    const password = Config.SPOTIFY_PASSWORD;
-    const url = Config.LOGIN_URL;
+    const username = Config.get("SPOTIFY_LOGIN");
+    const password = Config.get("SPOTIFY_PASSWORD");
+    const url = Config.get("LOGIN_URL");
     const argv = argvFactory({ headless: { type: "boolean", default: true } });
 
     browser = await puppeteer.launch({
@@ -52,8 +52,15 @@ const getToken = async (): Promise<string | undefined> => {
 
 const updateEnvfile = async (token: string) => {
   // Write new ACCESS_TOKEN to .env file
-  const envJson = { ...Config };
-  envJson.ACCESS_TOKEN = token;
+  const envJson: EnvironmentVariables = {
+    CLIENT_ID: Config.get("CLIENT_ID"),
+    CLIENT_SECRET: Config.get("CLIENT_SECRET"),
+    LOGIN_URL: Config.get("LOGIN_URL"),
+    REDIRECT_URI: Config.get("REDIRECT_URI"),
+    SPOTIFY_LOGIN: Config.get("SPOTIFY_LOGIN"),
+    SPOTIFY_PASSWORD: Config.get("SPOTIFY_PASSWORD"),
+    ACCESS_TOKEN: token,
+  };
 
   const envFileString = stringify(envJson);
   const envFilePath = `${ROOT_DIR}.env`;
