@@ -3,9 +3,9 @@ import request from "request";
 import Config from "./config";
 import logger from "./logger";
 
-var client_id = Config.CLIENT_ID;
-var client_secret = Config.CLIENT_SECRET;
-var redirect_uri = Config.REDIRECT_URI;
+var client_id = Config.get("CLIENT_ID");
+var client_secret = Config.get("CLIENT_SECRET");
+var redirect_uri = Config.get("REDIRECT_URI");
 
 var app = express();
 const PORT = 8888;
