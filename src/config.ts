@@ -26,13 +26,14 @@ export default class Config {
     if (!value && required) {
       throw new Error(`Value for ${key} in .env is "${typeof value}"`);
     }
+    if (!value && required === false) return undefined;
 
-    if (typeof value !== "string" && required) {
+    if (typeof value !== "string") {
       throw new Error(
         `Value for ${key} in .env is not a string, but "${typeof value}"`,
       );
     }
 
-    return value as string;
+    return value;
   }
 }
