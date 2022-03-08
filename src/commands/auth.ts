@@ -16,7 +16,6 @@ interface BrowserLoginConfig {
   password: string;
   url: string;
 }
-/** @deprecated - works on local machines, but not in Github Actions enviroment */
 export const getAccessTokenViaBrowserLogin: AccessTokenFactory<
   BrowserLoginConfig
 > = async ({ username, password, url }) => {
@@ -108,13 +107,15 @@ export const getAccessTokenViaRefreshToken: AccessTokenFactory<
 export const updateEnvfile = async (token: string) => {
   // Write new ACCESS_TOKEN to .env file
   const envJson: EnvironmentVariables = {
-    ACCESS_TOKEN: token,
     CLIENT_ID: Config.get("CLIENT_ID"),
     CLIENT_SECRET: Config.get("CLIENT_SECRET"),
     LOGIN_URL: Config.get("LOGIN_URL"),
     REDIRECT_URI: Config.get("REDIRECT_URI"),
+    SPOTIFY_LOGIN: Config.get("SPOTIFY_LOGIN"),
+    SPOTIFY_PASSWORD: Config.get("SPOTIFY_PASSWORD"),
     REFRESH_TOKEN: Config.get("REFRESH_TOKEN"),
     REFRESH_TOKEN_URL: Config.get("REFRESH_TOKEN_URL"),
+    ACCESS_TOKEN: token,
   };
 
   const envFileString = stringify(envJson);
