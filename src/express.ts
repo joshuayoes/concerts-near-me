@@ -57,7 +57,8 @@ app.get("/callback", function (req, res) {
     request.post(authOptions, function (error, response, body) {
       if (!error) {
         const token = body.access_token;
-        res.json({ token });
+        const refresh_token = body?.refresh_token;
+        res.json({ token, refresh_token });
         logger.info(
           `Successfully recieved accessToken: "${token.substring(0, 10)}..."`,
         );
@@ -72,9 +73,35 @@ app.get("/", (req, res) => {
   res.sendStatus(200);
 });
 
+app.get("/refresh_token", function (req, res) {
+  var refresh_token = req.query.refresh_token;
+  var authOptions = {
+    url: "https://accounts.spotify.com/api/token",
+    headers: {
+      "Authorization": "Basic " +
+        Buffer.from(client_id + ":" + client_secret).toString("base64"),
+    },
+    form: {
+      grant_type: "refresh_token",
+      refresh_token: refresh_token,
+    },
+    json: true,
+  };
+
+  request.post(authOptions, function (error, response, body) {
+    if (!error && response.statusCode === 200) {
+      var access_token = body.access_token;
+      res.send({
+        "access_token": access_token,
+      });
+    }
+  });
+});
+
 app.listen(PORT, () => {
   logger.info(`Listening on "http://${HOST}:${PORT}"...`);
   logger.info(`Registered: "${URL}/"`);
   logger.info(`Registered: "${URL}/login"`);
   logger.info(`Registered: "${URL}/callback"`);
+  logger.info(`Registered: "${URL}/refresh_token"`);
 });

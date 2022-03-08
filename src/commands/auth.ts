@@ -5,16 +5,25 @@ import { stringify } from "envfile";
 import Config, { EnvironmentVariables } from "../config";
 import { argvFactory, ROOT_DIR, toAsterisks } from "../utils";
 import logger from "../logger";
+import axios from "axios";
 
-const getToken = async (): Promise<string | undefined> => {
+type AccessTokenFactory<Config> = (
+  config: Config,
+) => Promise<string | undefined>;
+
+interface BrowserLoginConfig {
+  username: string;
+  password: string;
+  url: string;
+}
+export const getAccessTokenViaBrowserLogin: AccessTokenFactory<
+  BrowserLoginConfig
+> = async ({ username, password, url }) => {
   let browser: puppeteer.Browser | undefined = undefined;
   let token: string | undefined = undefined;
 
   try {
     // Get accessToken from Spotify using proxy server
-    const username = Config.get("SPOTIFY_LOGIN");
-    const password = Config.get("SPOTIFY_PASSWORD");
-    const url = Config.get("LOGIN_URL");
     const argv = argvFactory({ headless: { type: "boolean", default: true } });
 
     browser = await puppeteer.launch({
@@ -50,7 +59,52 @@ const getToken = async (): Promise<string | undefined> => {
   return token;
 };
 
-const updateEnvfile = async (token: string) => {
+interface RefreshTokenConfig {
+  REFRESH_TOKEN: string;
+  REFRESH_TOKEN_URL: string;
+}
+export const getAccessTokenViaRefreshToken: AccessTokenFactory<
+  RefreshTokenConfig
+> = async ({ REFRESH_TOKEN, REFRESH_TOKEN_URL }) => {
+  try {
+    const response = await axios.get<{ access_token: string }>(
+      REFRESH_TOKEN_URL,
+      { params: { "refresh_token": REFRESH_TOKEN } },
+    );
+    logger.info(`Requested new accessToken from "${REFRESH_TOKEN_URL}"`);
+
+    const access_token: unknown = response?.data?.access_token;
+
+    if (!access_token) {
+      logger.error(
+        `Failed to get access_token from "${REFRESH_TOKEN_URL}" using REFRESH_TOKEN: "${
+          REFRESH_TOKEN?.substring(0, 10)
+        }..."`,
+      );
+      return undefined;
+    }
+
+    if (typeof access_token !== "string") {
+      logger.error(
+        `access_token from "${REFRESH_TOKEN_URL}" is not a string, but ${typeof access_token}`,
+      );
+      return undefined;
+    }
+
+    logger.info(
+      `Successfully retrieved new accessToken: "${
+        access_token.substring(0, 10)
+      }..."`,
+    );
+
+    return access_token;
+  } catch (error) {
+    if (error instanceof Error) logger.error(error.message);
+    return undefined;
+  }
+};
+
+export const updateEnvfile = async (token: string) => {
   // Write new ACCESS_TOKEN to .env file
   const envJson: EnvironmentVariables = {
     CLIENT_ID: Config.get("CLIENT_ID"),
@@ -59,6 +113,8 @@ const updateEnvfile = async (token: string) => {
     REDIRECT_URI: Config.get("REDIRECT_URI"),
     SPOTIFY_LOGIN: Config.get("SPOTIFY_LOGIN"),
     SPOTIFY_PASSWORD: Config.get("SPOTIFY_PASSWORD"),
+    REFRESH_TOKEN: Config.get("REFRESH_TOKEN"),
+    REFRESH_TOKEN_URL: Config.get("REFRESH_TOKEN_URL"),
     ACCESS_TOKEN: token,
   };
 
@@ -69,9 +125,15 @@ const updateEnvfile = async (token: string) => {
 };
 
 (async () => {
-  const token = await getToken();
-  if (token) {
-    await updateEnvfile(token);
+  const accessToken = await getAccessTokenViaRefreshToken(
+    {
+      REFRESH_TOKEN: Config.get("REFRESH_TOKEN"),
+      REFRESH_TOKEN_URL: Config.get("REFRESH_TOKEN_URL"),
+    },
+  );
+
+  if (accessToken) {
+    await updateEnvfile(accessToken);
   } else {
     logger.error("Failed to get access token");
   }
