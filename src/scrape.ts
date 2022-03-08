@@ -1,13 +1,10 @@
 import cheerio, { CheerioAPI } from "cheerio";
 import axios from "axios";
-import https from "node:https";
 
 // #region Core Library
 /** Perform a GET request to URL and reutrn HTML payload */
 export const getHtml = async (url: string): Promise<string> =>
-  axios.get(url, { httpsAgent: new https.Agent({ keepAlive: true }) }).then((
-    { data },
-  ) => data);
+  axios.get(url).then(({ data }) => data);
 
 /** Get an instance of cherrio library */
 export const getCherrio = (html: string): CheerioAPI => cheerio.load(html);
@@ -27,7 +24,7 @@ export class Venue {
   ) {}
 
   /** Make a GET request to venue url and return a list of artist names that are performing */
-  async scrape(): Promise<string[]> {
+  async scrape() {
     const html = await getHtml(this.url);
     const $ = getCherrio(html);
     return this.reducer($);
