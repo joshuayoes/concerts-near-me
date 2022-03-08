@@ -1,10 +1,12 @@
-name: Install
+name: Main
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  schedule: 
+    - cron: '0 8 * * *' # Once a day at 8am https://crontab.guru/every-day-8am
 
 jobs:
   update-playlists:
