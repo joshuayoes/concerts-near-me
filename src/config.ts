@@ -8,8 +8,6 @@ export interface EnvironmentVariables {
   REDIRECT_URI: string;
   REFRESH_TOKEN: string;
   REFRESH_TOKEN_URL: string;
-  SPOTIFY_LOGIN: string;
-  SPOTIFY_PASSWORD: string;
 }
 
 type EnvKey = keyof EnvironmentVariables;
