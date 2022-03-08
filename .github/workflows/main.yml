@@ -17,8 +17,6 @@ jobs:
       CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
       LOGIN_URL: ${{ secrets.LOGIN_URL }}
       REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
-      SPOTIFY_LOGIN: ${{ secrets.SPOTIFY_LOGIN }}
-      SPOTIFY_PASSWORD: ${{ secrets.SPOTIFY_PASSWORD }}
       REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
       REFRESH_TOKEN_URL: ${{ secrets.REFRESH_TOKEN_URL }}
     steps:
