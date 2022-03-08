@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  update-playlists:
     runs-on: ubuntu-latest
     environment: Production
     env:
@@ -17,6 +17,8 @@ jobs:
       REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
       SPOTIFY_LOGIN: ${{ secrets.SPOTIFY_LOGIN }}
       SPOTIFY_PASSWORD: ${{ secrets.SPOTIFY_PASSWORD }}
+      REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+      REFRESH_TOKEN_URL: ${{ secrets.REFRESH_TOKEN_URL }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
