@@ -26,6 +26,14 @@ URL to start login flow to access `ACCESS_TOKEN`. `http://localhost:8888/login` 
 
 URI/URL for Spotify to send back your `ACCESS_TOKEN`. `http://localhost:8888/callback` by default, to be compatible with `yarn serve` script. Value must be set in [your Spotify app settings](https://developer.spotify.com/documentation/general/guides/authorization/app-settings/).
 
+#### REFRESH_TOKEN
+
+Token provided by Spotify to grab a fresh `ACCESS_TOKEN`. Must only be set once, and reused effectively forever. Grab by running `yarn serve` and visiting `http://localhost:8888/login`.
+
+#### REFRESH_TOKEN_URL
+
+URL to start refresh token flow to access `ACCESS_TOKEN`. `http://localhost:8888/refresh_token` by default, to be compatible with `yarn serve` script.
+
 #### SPOTIFY_LOGIN
 
 Your Spotify account login email or username. Utilized by `yarn auth` script to login to your spotify account via a headless browser.
