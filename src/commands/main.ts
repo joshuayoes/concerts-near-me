@@ -60,6 +60,10 @@ const updateAllPlaylists = async ({ filter, dry }: Options = {}) => {
   }
 
   if (errors.length > 0) {
+    for (const error of errors) {
+      console.error(error);
+    }
+
     throw new AggregateError(
       errors,
       `${errors.length} errors were thrown trying to update all playlists`,
