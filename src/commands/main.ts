@@ -40,6 +40,8 @@ const updateAllPlaylists = async ({ filter, dry }: Options = {}) => {
     await addTracksToPlaylist(playlistId, allTopTrackUris);
   };
 
+  const errors: Error[] = [];
+
   for (const playlist of playlists) {
     const filterRegex = filter ? new RegExp(filter) : undefined;
 
@@ -47,7 +49,21 @@ const updateAllPlaylists = async ({ filter, dry }: Options = {}) => {
       continue;
     }
 
-    await updatePlaylist(playlist);
+    try {
+      await updatePlaylist(playlist);
+    } catch (error) {
+      if (error instanceof Error) {
+        errors.push(error);
+        logger.error(error.message);
+      }
+    }
+  }
+
+  if (errors.length > 0) {
+    throw new AggregateError(
+      errors,
+      `${errors.length} errors were thrown trying to update all playlists`,
+    );
   }
 };
 
