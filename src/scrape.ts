@@ -4,7 +4,10 @@ import axios from "axios";
 // #region Core Library
 /** Perform a GET request to URL and reutrn HTML payload */
 export const getHtml = async (url: string): Promise<string> =>
-  axios.get<string>(url, { timeout: 10 * 1000 }).then(({ data }) => data);
+  axios.get<string>(url, {
+    timeout: 10 * 1000,
+    transitional: { clarifyTimeoutError: true },
+  }).then(({ data }) => data);
 
 /** Get an instance of cherrio library */
 export const getCherrio = (html: string): CheerioAPI => cheerio.load(html);
