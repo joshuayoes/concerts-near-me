@@ -5,7 +5,7 @@ import axiosRetry from "axios-retry";
 // #region Core Library
 /** Perform a GET request to URL and reutrn HTML payload */
 export const getHtml = async (url: string): Promise<string> => {
-  axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
+  axiosRetry(axios, { retries: 8, retryDelay: axiosRetry.exponentialDelay });
   return axios.get<string>(url, {
     timeout: 10 * 1000,
     transitional: { clarifyTimeoutError: true },
