@@ -11,7 +11,7 @@ export const getHtml = async (url: string): Promise<string> => {
     shouldResetTimeout: true,
   });
   return axios.get<string>(url, {
-    timeout: 10 * 1000,
+    timeout: 15 * 1000,
     transitional: { clarifyTimeoutError: true },
   }).then(({ data }) => data);
 };
