@@ -7,7 +7,7 @@ import axiosRetry from "axios-retry";
 export const getHtml = async (url: string): Promise<string> => {
   axiosRetry(axios, {
     retries: 8,
-    retryDelay: axiosRetry.exponentialDelay,
+    retryDelay: (retryCount) => retryCount * 1000,
     shouldResetTimeout: true,
   });
   return axios.get<string>(url, {
