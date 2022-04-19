@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ main ]
   schedule: 
-    - cron: '0 8 * * *' # Once a day at 8am https://crontab.guru/every-day-8am
+    - cron: '0 13 * * *' # Once a day at 1pm GMT / 7am MT (GMT-06:00) https://crontab.guru/#0_13_*_*_*
 
 jobs:
   update-playlists:
