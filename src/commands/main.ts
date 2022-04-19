@@ -29,6 +29,12 @@ const updateAllPlaylists = async ({ filter, dry }: Options = {}) => {
 
     logger.info(`Scrapping ${venue.name} at "${venueUrl}"...`);
     const artistsNames = await venue.scrape();
+
+    if (artistsNames.length === 0) {
+      logger.warn(`No artists found for "${venueUrl}"`);
+      return;
+    }
+
     const allTopTrackUris = await getManyArtistsTopTracksBySearch(artistsNames);
 
     if (dry) {
