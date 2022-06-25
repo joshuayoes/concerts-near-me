@@ -1,6 +1,6 @@
 # Concerts Near Me
 
-Scape nearby concert venue websites and create spotify playlists with the top tracks of artists that are coming to play.
+Scrape nearby concert venue websites and create Spotify playlists with the top tracks of artists that are coming to play.
 
 ## Authentication and Configuration
 
@@ -28,7 +28,7 @@ URI/URL for Spotify to send back your `ACCESS_TOKEN`. `http://localhost:8888/cal
 
 #### REFRESH_TOKEN
 
-Token provided by Spotify to grab a fresh `ACCESS_TOKEN`. Must only be set once, and reused effectively forever. Grab by running `yarn serve` and visiting `http://localhost:8888/login`.
+Token provided by Spotify to grab a fresh `ACCESS_TOKEN`. Must only be set once and reused effectively forever. Grab by running `yarn serve` and visiting `http://localhost:8888/login`.
 
 #### REFRESH_TOKEN_URL
 
@@ -36,11 +36,11 @@ URL to start refresh token flow to access `ACCESS_TOKEN`. `http://localhost:8888
 
 #### SPOTIFY_LOGIN
 
-Your Spotify account login email or username. Utilized by `yarn auth` script to login to your spotify account via a headless browser.
+Your Spotify account login email or username. Utilized by `yarn auth` script to login to your Spotify account via a headless browser.
 
 #### SPOTIFY_PASSWORD
 
-Your Spotify password. Utilized by `yarn auth` script to login to your spotify account via a headless browser.
+Your Spotify password. Utilized by `yarn auth` script to login to your Spotify account via a headless browser.
 
 ### `playlists.json`
 
@@ -52,7 +52,7 @@ A link to a playlist you want to add songs to. Example: `https://open.spotify.co
 
 #### `venueUrl`
 
-The url of the venue page you are attempting to scrape. However, only accept known urls specified in `src/scrape.ts` will be accepted.
+The URL of the venue page you are attempting to scrape. However, only accept known URLs specified in `src/scrape.ts` will be accepted.
 
 ## Running
 
@@ -64,4 +64,4 @@ Run `yarn test` to run the test suite. This will run unit tests for key function
 
 ### Generating Mock Payloads
 
-For quickly developing HTML files to test against locally, utilize the `yarn generate-mock` script. It accepts two arguments: `venueName` and `url`. `venueName` should be the name of the venue in PascalCase, and will generate an HTML file in `src/__tests__/__mocks__` with the same name. `url` is the url of the website you want to scrape and get an HTML payload from. Example: `yarn generate-mock Washingtons https://washingtonsfoco.com/events/`
+For quickly developing HTML files to test against locally, utilize the `yarn generate-mock` script. It accepts two arguments: `venueName` and `url`. `venueName` should be the name of the venue in PascalCase, and will generate an HTML file in `src/__tests__/__mocks__` with the same name. `url` is the URL of the website you want to scrape and get an HTML payload from. Example: `yarn generate-mock Washingtons https://washingtonsfoco.com/events/`
