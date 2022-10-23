@@ -321,3 +321,43 @@ const CrystalBallroom = new Venue(
 );
 venues.push(CrystalBallroom);
 // #endregion
+
+// #region Hawthorne Theatre
+const hawthorneTheatreUrl = "https://hawthornetheatre.com/events/";
+
+const hawthorneTheatreArtistNameReducer: ArtistNameReducer = ($) => {
+  const headings = $("a#eventTitle h2");
+
+  const containsMoved = matches(/\bMOVED\b/g);
+  const containsRescheduled = matches(/\bRescheduled\b/gi);
+
+  const elementsToArtistNames = headings
+    .toArray()
+    .map(extractHeading)
+    .map(removeWhitespace)
+    .map(removeParenthesis)
+    .filter(containsMoved)
+    .filter(containsRescheduled)
+    .map(removeBoldNotation)
+    .map(remove("Monster Energy Outbreak Tour Presents: "))
+    .map(removeAfterAnd)
+    .map(removeAfterColon)
+    .map(removeAfterDash)
+    .map(removeAfterAmpersand)
+    .filter(matches(/BEST NIGHT EVER/gi))
+    .filter(matches(/GIMME GIMME DISCO/gi))
+    .filter(matches(/THE EMO NIGHT TOUR/gi))
+    .filter(unique)
+    .map(toPascalCase)
+    .filter(Boolean);
+
+  return elementsToArtistNames;
+};
+
+const HawthorneTheatre = new Venue(
+  "Hawthorne Theatre",
+  hawthorneTheatreUrl,
+  hawthorneTheatreArtistNameReducer
+);
+venues.push(HawthorneTheatre);
+// #endregion

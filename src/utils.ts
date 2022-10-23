@@ -13,7 +13,7 @@ export const getLocalHtml = async (fileName: string) => {
 };
 
 export const argvFactory = <Options extends Record<string, yargs.Options>>(
-  options: Options,
+  options: Options
 ) => yargs(hideBin(process.argv)).options(options).parseSync();
 
 export const toAsterisks = (secret: string) => "*".repeat(secret.length);
@@ -27,4 +27,9 @@ export const artistNameOverridesMap = new Map<string, string>()
   .set("Graham Good", "Graham Good and the Painters")
   .set("Omd", "Orchestral Manoeuvres In The Dark")
   .set("Big Head Todd", "Big Head Todd and the Monsters")
-  .set("K. Flay", "K.Flay");
+  .set("K. Flay", "K.Flay")
+  .set("Jonny’s Day Out", "Amos Heart")
+  .set("Haru Nemuri", "HARU NEMURI")
+  .set("Melissa Villaseñor", "Melissa Villasenor")
+  .set("Miyavi", "MIYAVI")
+  .set("Brakence", "brakence");
