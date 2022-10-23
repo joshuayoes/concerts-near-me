@@ -5,6 +5,7 @@
   "main": "src/commands/main.ts",
   "scripts": {
     "initialize": "cp .env.example .env && cp playlists.example.json playlists.json",
+    "cp:playlists:ci": "cp playlists.ci.json playlists.json",
     "start": "yarn update-auth && yarn main",
     "serve": "ts-node src/express.ts",
     "auth": "ts-node src/commands/auth.ts",
