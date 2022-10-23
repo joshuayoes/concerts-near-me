@@ -10,10 +10,12 @@ export const getHtml = async (url: string): Promise<string> => {
     retryDelay: (retryCount) => retryCount * 1000,
     shouldResetTimeout: true,
   });
-  return axios.get<string>(url, {
-    timeout: 15 * 1000,
-    transitional: { clarifyTimeoutError: true },
-  }).then(({ data }) => data);
+  return axios
+    .get<string>(url, {
+      timeout: 15 * 1000,
+      transitional: { clarifyTimeoutError: true },
+    })
+    .then(({ data }) => data);
 };
 
 /** Get an instance of cherrio library */
@@ -30,7 +32,7 @@ export class Venue {
     /** URL of the venue website page to be scraped */
     readonly url: string,
     /** Function that takes a cheerio instance and returns an array of artist names */
-    readonly reducer: ArtistNameReducer,
+    readonly reducer: ArtistNameReducer
   ) {}
 
   /** Make a GET request to venue url and return a list of artist names that are performing */
@@ -57,16 +59,18 @@ const unique = (value: string, index: number, self: string[]) =>
 
 const matches = (regex: RegExp) => (string: string) => !regex.test(string);
 
-const replace = (search: string, replacement: string) =>
-  (string: string) => string.replace(search, replacement);
+const replace = (search: string, replacement: string) => (string: string) =>
+  string.replace(search, replacement);
 
-const remove = (regex: string | RegExp) =>
-  (title: string) => title.replace(regex, "").trim();
+const remove = (regex: string | RegExp) => (title: string) =>
+  title.replace(regex, "").trim();
 
 const toPascalCase = (value: string) =>
-  value.toLowerCase().split(" ").map((word) =>
-    word.charAt(0).toUpperCase() + word.toLowerCase().slice(1)
-  ).join(" ");
+  value
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.toLowerCase().slice(1))
+    .join(" ");
 
 const removeAfterAmpersand = remove(/ &.+/g);
 const removeWhitespace = remove(/\n\t/g);
@@ -90,7 +94,8 @@ const washingtonsArtistNameReducer: ArtistNameReducer = ($) => {
   const removeAfterTrio = remove(/Trio .+/g);
   const removeQuintet = remove(/Quintet/g);
 
-  const elementsToArtistNames = $("h2.font1by25.font1By5remMD").toArray()
+  const elementsToArtistNames = $("h2.font1by25.font1By5remMD")
+    .toArray()
     .map(extractHeading)
     .map(removeWhitespace)
     .map(removeBoldNotation)
@@ -109,7 +114,7 @@ const washingtonsArtistNameReducer: ArtistNameReducer = ($) => {
 const Washingtons = new Venue(
   "Washingtons",
   washingtonsUrl,
-  washingtonsArtistNameReducer,
+  washingtonsArtistNameReducer
 );
 venues.push(Washingtons);
 // #endregion
@@ -120,7 +125,8 @@ const aggieTheaterUrl = "https://www.z2ent.com/aggie-theatre";
 const aggieTheaterArtistNameReducer: ArtistNameReducer = ($) => {
   const headings = $("h3.title > a");
 
-  const elementsToArtistNames = headings.toArray()
+  const elementsToArtistNames = headings
+    .toArray()
     .map(extractHeading)
     .map(removeAfterWith)
     .map(removeParenthesis)
@@ -133,7 +139,7 @@ const aggieTheaterArtistNameReducer: ArtistNameReducer = ($) => {
 const AggieTheater = new Venue(
   "Aggie Theater",
   aggieTheaterUrl,
-  aggieTheaterArtistNameReducer,
+  aggieTheaterArtistNameReducer
 );
 venues.push(AggieTheater);
 // #endregion
@@ -148,7 +154,8 @@ const roselandTheaterArtistNameReducer: ArtistNameReducer = ($) => {
   const removeInConcert = remove(/In Concert/gi);
   const removeNorthAmericanTour = remove(/North American Tour/gi);
 
-  const elementsToArtistNames = headings.toArray()
+  const elementsToArtistNames = headings
+    .toArray()
     .map(extractHeading)
     .map(removeWhitespace)
     .map(removeSuffix)
@@ -175,7 +182,7 @@ const roselandTheaterArtistNameReducer: ArtistNameReducer = ($) => {
 const RoselandTheater = new Venue(
   "Roseland Theater",
   roselandTheaterUrl,
-  roselandTheaterArtistNameReducer,
+  roselandTheaterArtistNameReducer
 );
 
 venues.push(RoselandTheater);
@@ -191,7 +198,8 @@ const redRocksArtistNameReducer: ArtistNameReducer = ($) => {
   const remove3D = remove(/ 3-D/g);
   const removeWithTheColoradoSymphony = remove(/ with The Colorado Symphony/g);
 
-  const elementsToArtistNames = headings.toArray()
+  const elementsToArtistNames = headings
+    .toArray()
     .map(extractHeading)
     .map(removeWhitespace)
     .map(removeAfterColon)
@@ -220,7 +228,8 @@ const marquisTheaterArtistNameReducer: ArtistNameReducer = ($) => {
 
   const removeAfterDoubleQuotes = remove(/\".+/g);
 
-  const elementsToArtistNames = headings.toArray()
+  const elementsToArtistNames = headings
+    .toArray()
     .map(extractHeading)
     .map(replace("¥", "y"))
     .map(replace("$", "s"))
@@ -238,7 +247,7 @@ const marquisTheaterArtistNameReducer: ArtistNameReducer = ($) => {
 const MarquisTheater = new Venue(
   "Marquis Theater",
   marquisTheaterUrl,
-  marquisTheaterArtistNameReducer,
+  marquisTheaterArtistNameReducer
 );
 venues.push(MarquisTheater);
 // #endregion
@@ -252,7 +261,8 @@ const wonderBallroomArtistNameReducer: ArtistNameReducer = ($) => {
   const removeAnyPresents = remove(/.+ Presents:? /);
   const removeAfterWithSpecialGuest = remove(/ with Special Guest .+/gi);
 
-  const elementsToArtistNames = headings.toArray()
+  const elementsToArtistNames = headings
+    .toArray()
     .map(extractHeading)
     .map(removeWhitespace)
     .map(removeAnyPresents)
@@ -272,7 +282,7 @@ const wonderBallroomArtistNameReducer: ArtistNameReducer = ($) => {
 const WonderBallroom = new Venue(
   "Wonder Ballroom",
   wonderBallroomUrl,
-  wonderBallroomArtistNameReducer,
+  wonderBallroomArtistNameReducer
 );
 venues.push(WonderBallroom);
 // #endregion
@@ -287,7 +297,8 @@ const crystalBallroomArtistNameReducer: ArtistNameReducer = ($) => {
   const removeNthAnniversary = remove(/\d+th Anniversary/gi);
   const removeRescheduled = remove("Rescheduled: ");
 
-  const elementsToArtistNames = headings.toArray()
+  const elementsToArtistNames = headings
+    .toArray()
     .map(extractHeading)
     .map(removeWhitespace)
     .map(removeParenthesis)
@@ -306,7 +317,7 @@ const crystalBallroomArtistNameReducer: ArtistNameReducer = ($) => {
 const CrystalBallroom = new Venue(
   "Crystal Ballroom",
   crystalBallroomUrl,
-  crystalBallroomArtistNameReducer,
+  crystalBallroomArtistNameReducer
 );
 venues.push(CrystalBallroom);
 // #endregion
